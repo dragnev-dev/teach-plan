@@ -6,11 +6,11 @@
  */
 
 import React from 'react';
-import HomeScreen from './screens/HomeScreen';
 import 'react-native-gesture-handler';
+import AppNavigator from './navigation/AppNavigator';
 
 function App(): JSX.Element {
-  return <HomeScreen />;
+  return <AppNavigator />;
 }
 
 export default App;
