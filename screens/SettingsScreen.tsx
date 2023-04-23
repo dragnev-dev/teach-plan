@@ -26,8 +26,17 @@ const SettingsScreen = () => {
         <Text style={styles.sectionTitle}>Appearance</Text>
         <View style={styles.appearanceSection}>
           <Text style={styles.appearanceOption}>Dark mode</Text>
-          <Switch value={darkModeEnabled} onValueChange={handleDarkModeToggle} />
+          <Switch
+            value={darkModeEnabled}
+            onValueChange={handleDarkModeToggle}
+          />
         </View>
+      </View>
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Import syllabus</Text>
+      </View>
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Import schedule</Text>
       </View>
     </View>
   );

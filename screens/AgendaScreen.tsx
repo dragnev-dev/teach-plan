@@ -1,9 +1,9 @@
+import {Button, Text, View} from 'react-native';
 import React from 'react';
-import {View, Text, Button} from 'react-native';
 import {useAppDispatch, useAppSelector} from '../store/hooks';
 import {incrementCounter} from '../store/actions/counterActions';
 
-const HomeScreen = () => {
+const AgendaScreen = () => {
   const counter = useAppSelector(state => state.counter.counter);
   const dispatch = useAppDispatch();
 
@@ -19,4 +19,4 @@ const HomeScreen = () => {
   );
 };
 
-export default HomeScreen;
+export default AgendaScreen;
