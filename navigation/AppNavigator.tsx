@@ -8,6 +8,8 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import AgendaScreen from '../screens/AgendaScreen';
 import MonthlyScreen from '../screens/MonthlyScreen';
 import WeeklyScreen from '../screens/WeeklyScreen';
+import UploadDataScreen from '../screens/UploadDataScreen';
+import DataResultScreen from '../screens/DataResultScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -46,6 +48,8 @@ const SettingsStack = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen name="Settings" component={SettingsScreen} />
+      <Stack.Screen name="UploadData" component={UploadDataScreen} />
+      <Stack.Screen name="DataResult" component={DataResultScreen} />
     </Stack.Navigator>
   );
 };

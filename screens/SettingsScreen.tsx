@@ -1,9 +1,25 @@
 import React, {useState} from 'react';
-import {View, Text, Switch, StyleSheet} from 'react-native';
+import {View, Text, Switch, StyleSheet, Button} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {Syllabus} from '../models/syllabus';
+import {StackNavigationProp} from '@react-navigation/stack';
+
+type StackParamList = {
+  Settings: undefined;
+  UploadData: undefined;
+  DataResult: {data: Syllabus};
+};
 
 const SettingsScreen = () => {
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [darkModeEnabled, setDarkModeEnabled] = useState(false);
+
+  type SettingsScreenNavigationProp = StackNavigationProp<
+    StackParamList,
+    'Settings'
+  >;
+
+  const navigation = useNavigation<SettingsScreenNavigationProp>();
 
   const handleNotificationsToggle = () => {
     setNotificationsEnabled(!notificationsEnabled);
@@ -11,6 +27,10 @@ const SettingsScreen = () => {
 
   const handleDarkModeToggle = () => {
     setDarkModeEnabled(!darkModeEnabled);
+  };
+
+  const handleImportSyllabus = () => {
+    navigation.navigate('UploadData');
   };
 
   return (
@@ -34,6 +54,7 @@ const SettingsScreen = () => {
       </View>
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Import syllabus</Text>
+        <Button title={'Import syllabus'} onPress={handleImportSyllabus} />
       </View>
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Import schedule</Text>
