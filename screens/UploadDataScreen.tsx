@@ -4,8 +4,6 @@ import {Button, TextInput, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {Syllabus} from '../models/syllabus';
-import SyllabusService from '../services/syllabus.service';
-import {container} from 'tsyringe';
 
 // Define the StackParamList type to represent your app's navigation structure
 type StackParamList = {
@@ -23,22 +21,21 @@ const UploadDataScreen = () => {
   >;
   const navigation = useNavigation<SettingsScreenNavigationProp>();
 
-  const syllabusService = container.resolve(SyllabusService);
+  // const syllabusService = container.resolve(SyllabusService);
 
   const handleParse = async () => {
-    let data: Syllabus | null;
-    try {
-      data = JSON.parse(input);
-    } catch (err) {
-      Alert.alert('Invalid JSON');
-    }
-    // TODO: and how valid is this approach?
-    data = data!;
-
+    // let data: Syllabus | null;
     // try {
-    let syllabusId = await syllabusService.addSyllabus(data);
-    // console.log('success! ' + syllabusId);
-    navigation.navigate('DataResult', {syllabusId});
+    //   data = JSON.parse(input);
+    // } catch (err) {
+    //   Alert.alert('Invalid JSON');
+    // }
+    // // TODO: and how valid is this approach?
+    // data = data!;
+    //
+    // try {
+    // let syllabusId = await syllabusService.addSyllabus(data);
+    // navigation.navigate('DataResult', {syllabusId});
     // } catch (err) {
     //   Alert.alert('Error saving to the DB');
     // }

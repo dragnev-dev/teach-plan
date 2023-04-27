@@ -10,6 +10,8 @@ import MonthlyScreen from '../screens/MonthlyScreen';
 import WeeklyScreen from '../screens/WeeklyScreen';
 import DataResultScreen from '../screens/DataResultScreen';
 import UploadDataScreenWrapper from '../screens/UploadDataScreen';
+import TodoListScreen from '../screens/TodoListScreen';
+import AddTodoScreen from '../screens/AddTodoScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -54,13 +56,23 @@ const SettingsStack = () => {
   );
 };
 
+const TodoStack = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="TodoList" component={TodoListScreen} />
+      <Stack.Screen name="AddTodo" component={AddTodoScreen} />
+    </Stack.Navigator>
+  );
+};
+
 const AppNavigator = () => {
   return (
     <NavigationContainer>
       <Tab.Navigator>
         <Tab.Screen name="AgendaStack" component={AgendaStack} />
         <Tab.Screen name="WeeklyStack" component={WeeklyStack} />
-        <Tab.Screen name="MontlyStack" component={MonthlyStack} />
+        {/*<Tab.Screen name="MontlyStack" component={MonthlyStack} />*/}
+        <Tab.Screen name="TodoStack" component={TodoStack} />
         <Tab.Screen name="SettingsStack" component={SettingsStack} />
       </Tab.Navigator>
     </NavigationContainer>
