@@ -1,7 +1,10 @@
 export interface Syllabus {
+  id: number;
   subject: string;
   class: number;
   syllabusEntries: SyllabusEntry[];
+  year: number;
+  version: number;
 }
 
 export interface SyllabusEntry {
