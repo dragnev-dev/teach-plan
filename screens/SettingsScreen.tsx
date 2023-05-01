@@ -6,8 +6,8 @@ import {StackNavigationProp} from '@react-navigation/stack';
 
 type StackParamList = {
   Settings: undefined;
-  UploadData: undefined;
-  DataResult: {data: Syllabus};
+  UploadSyllabus: undefined;
+  UploadSyllabusResult: {data: Syllabus};
 };
 
 const SettingsScreen = () => {
@@ -30,7 +30,7 @@ const SettingsScreen = () => {
   };
 
   const handleImportSyllabus = () => {
-    navigation.navigate('UploadData');
+    navigation.navigate('UploadSyllabus');
   };
 
   return (

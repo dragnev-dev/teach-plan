@@ -8,8 +8,8 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import AgendaScreen from '../screens/AgendaScreen';
 import MonthlyScreen from '../screens/MonthlyScreen';
 import WeeklyScreen from '../screens/WeeklyScreen';
-import DataResultScreen from '../screens/DataResultScreen';
-import UploadDataScreenWrapper from '../screens/UploadDataScreen';
+import UploadSyllabusResultScreen from '../screens/UploadSyllabusResultScreen';
+import UploadSyllabusScreen from '../screens/UploadSyllabusScreen';
 import TodoListScreen from '../screens/TodoListScreen';
 import AddTodoScreen from '../screens/AddTodoScreen';
 
@@ -50,8 +50,8 @@ const SettingsStack = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen name="Settings" component={SettingsScreen} />
-      <Stack.Screen name="UploadData" component={UploadDataScreenWrapper} />
-      <Stack.Screen name="DataResult" component={DataResultScreen} />
+      <Stack.Screen name="UploadSyllabus" component={UploadSyllabusScreen} />
+      <Stack.Screen name="UploadSyllabusResult" component={UploadSyllabusResultScreen} />
     </Stack.Navigator>
   );
 };
