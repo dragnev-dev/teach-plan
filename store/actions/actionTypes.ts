@@ -5,4 +5,5 @@ export enum ActionTypes {
   DELETE_TODO = 'DELETE_TODO',
   TOGGLE_TODO = 'TOGGLE_TODO',
   EDIT_TODO = 'EDIT_TODO',
+  ADD_SYLLABUS = 'ADD_TODO',
 }

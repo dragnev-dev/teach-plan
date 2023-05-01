@@ -16,6 +16,7 @@ import {
   REHYDRATE,
 } from 'redux-persist/es/constants';
 import todoReducer from './reducers/todoReducer';
+import {syllabusReducer} from './reducers/syllabusReducer';
 
 const persistConfig = {
   key: 'root',
@@ -23,6 +24,7 @@ const persistConfig = {
 };
 
 const rootReducer = combineReducers({
+  syllabus: syllabusReducer,
   counter: counterReducer,
   todos: todoReducer,
 });
