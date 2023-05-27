@@ -3,6 +3,7 @@ export interface Syllabus {
   subject: string;
   class: number;
   syllabusEntries: SyllabusEntry[];
+  secondTermStartEntry?: number;
   year: number;
   version: number;
 }

@@ -2,7 +2,7 @@ import {ActionTypes} from '../actions/actionTypes';
 import {Syllabus, SyllabusEntry} from '../../models/syllabus';
 import {Action} from 'redux';
 
-export interface SyllabusState {
+interface SyllabusState {
   syllabuses: Syllabus[];
 }
 const initialState: SyllabusState = {
@@ -14,8 +14,11 @@ export function syllabusReducer(
   action: Action & {payload?: any},
 ): SyllabusState {
   switch (action.type) {
-    case ActionTypes.ADD_SYLLABUS:
-      return {...state, syllabuses: [...state.syllabuses, action.payload.syllabus]};
+    case ActionTypes.ADD_SYLLABUSES:
+      return {
+        ...state,
+        syllabuses: [...state.syllabuses].concat(action.payload.syllabuses),
+      };
     default:
       return state;
   }
