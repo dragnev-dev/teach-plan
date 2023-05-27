@@ -3,6 +3,7 @@ import {View, Text, Switch, StyleSheet, Button} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {Syllabus} from '../models/syllabus';
 import {StackNavigationProp} from '@react-navigation/stack';
+import {SCREENS} from '../navigation/AppNavigator';
 
 type StackParamList = {
   Settings: undefined;
@@ -15,7 +16,7 @@ const SettingsScreen = () => {
 
   type SettingsScreenNavigationProp = StackNavigationProp<
     StackParamList,
-    'Settings'
+    SCREENS.APP_SETTINGS
   >;
 
   const navigation = useNavigation<SettingsScreenNavigationProp>();
@@ -25,7 +26,7 @@ const SettingsScreen = () => {
   };
 
   const handleImportData = () => {
-    navigation.navigate('Upload Data');
+    navigation.navigate(SCREENS.UPLOAD_DATA);
   };
 
   return (

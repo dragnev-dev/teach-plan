@@ -62,7 +62,7 @@ const UploadDataScreen = () => {
       );
       dispatch(addSyllabuses(model.syllabuses));
       Alert.alert('Import successful');
-      navigation.navigate('AgendaStackAgenda');
+      navigation.navigate('Agenda');
     } catch (e) {
       console.error(e);
       Alert.alert('Error importing data');

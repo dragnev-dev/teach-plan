@@ -3,6 +3,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {TeacherScheduleEntry} from '../models/teacherScheduleEntry';
 import {NavigationProp} from '@react-navigation/native';
 import HTMLView from 'react-native-htmlview';
+import {SCREENS} from '../navigation/AppNavigator';
 
 type SectionProps = PropsWithChildren<{
   navigation: NavigationProp<
@@ -42,7 +43,7 @@ function SchoolHour({
     );
   }
   const handleScheduleEntryPress = () => {
-    navigation.navigate('DetailsScreen', {
+    navigation.navigate(SCREENS.DETAILS_SCREEN, {
       date: date.toDateString(),
       hour: number,
       key: {date: date.toDateString(), hour: number},
