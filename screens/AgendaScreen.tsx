@@ -4,7 +4,7 @@ import {RootState} from '../store/store';
 import {useSelector} from 'react-redux';
 import {getScheduleByDate} from '../store/reducers/scheduleReducer';
 import {TeacherScheduleEntry} from '../models/teacherScheduleEntry';
-import SchoolHourComponent from '../components/SchoolHourComponent';
+import SchoolHour from '../components/SchoolHour';
 import {useNavigation} from '../store/hooks';
 
 const AgendaScreen = () => {
@@ -26,7 +26,7 @@ const AgendaScreen = () => {
     for (let i = 1; i <= 7; i++) {
       let entry = entries.find(e => e.schoolHour === i);
       entriesElements.push(
-        SchoolHourComponent({
+        SchoolHour({
           navigation,
           date: date,
           number: i,

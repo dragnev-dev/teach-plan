@@ -1,12 +1,11 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {useSelector} from 'react-redux';
 import {RootState} from '../store/store';
 import {getSchoolHourForDate} from '../store/reducers/scheduleReducer';
 import {RouteProp} from '@react-navigation/native';
-import HTMLView from 'react-native-htmlview';
 import {useNavigation} from '../store/hooks';
-import { SchoolHourDetails } from '../components/SchoolHourDetailsComponent';
+import {SchoolHourDetails} from '../components/SchoolHourDetails';
 
 interface DetailsScreenProps {
   route: RouteProp<{
@@ -40,7 +39,7 @@ export const DetailsScreen: React.FC<DetailsScreenProps> = ({route}) => {
     <View
       style={styles.container}
       key={`${route.params.key.date}-${route.params.key.hour}`}>
-      <SchoolHourDetails scheduleEntry={syllabusEntry!}></SchoolHourDetails>
+      <SchoolHourDetails scheduleEntry={syllabusEntry!} />
     </View>
   );
 };

@@ -27,7 +27,7 @@ type SectionProps = PropsWithChildren<{
   key: number;
 }>;
 
-function SchoolHourComponent({
+function SchoolHour({
   navigation,
   date,
   number,
@@ -84,4 +84,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SchoolHourComponent;
+export default SchoolHour;
