@@ -41,7 +41,7 @@ function SchoolHour({
       </View>
     );
   }
-  const handleScheduleEntryPress = (number: number) => {
+  const handleScheduleEntryPress = () => {
     navigation.navigate('DetailsScreen', {
       date: date.toDateString(),
       hour: number,
@@ -49,9 +49,7 @@ function SchoolHour({
     });
   };
   return (
-    <TouchableOpacity
-      onPress={() => handleScheduleEntryPress(number)}
-      key={key}>
+    <TouchableOpacity onPress={() => handleScheduleEntryPress()} key={key}>
       <View style={styles.item}>
         <Text style={styles.classText}>
           <Text

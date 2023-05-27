@@ -1,5 +1,5 @@
 import React, {PropsWithChildren} from 'react';
-import { StyleSheet, Text, useColorScheme, View } from "react-native";
+import {StyleSheet, Text, useColorScheme, View} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 type SectionProps = PropsWithChildren<{
@@ -33,7 +33,6 @@ function Section({children, title}: SectionProps): JSX.Element {
 }
 
 const styles = StyleSheet.create({
-
   sectionContainer: {
     marginTop: 32,
     paddingHorizontal: 24,

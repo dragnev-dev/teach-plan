@@ -1,9 +1,8 @@
 import React, {useState} from 'react';
 import {View, TextInput, Button, Alert, ActivityIndicator} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
 import {Schedule} from '../models/schedule';
 import {Syllabus} from '../models/syllabus';
-import {useAppDispatch} from '../store/hooks';
+import {useAppDispatch, useNavigation} from '../store/hooks';
 import {addSchedule} from '../store/actions/scheduleActions';
 import {addSyllabuses} from '../store/actions/syllabusActions';
 

@@ -1,8 +1,5 @@
 import {ActionTypes} from './actionTypes';
-import {
-  AddScheduleAction,
-  AddSchedulePayload,
-} from './actionCreators';
+import {AddScheduleAction, AddSchedulePayload} from './actionCreators';
 
 export const addSchedule = (
   payload: AddSchedulePayload,
