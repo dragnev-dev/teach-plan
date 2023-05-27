@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
-import {View, Button, Alert, TextInput} from 'react-native';
+import {View, TextInput, Button, Alert, ActivityIndicator} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import {Schedule} from '../models/schedule';
 import {Syllabus} from '../models/syllabus';
-import {addSchedule} from '../store/actions/scheduleActions';
 import {useAppDispatch} from '../store/hooks';
+import {addSchedule} from '../store/actions/scheduleActions';
 import {addSyllabuses} from '../store/actions/syllabusActions';
-import {useNavigation} from '@react-navigation/native';
 
 interface ImportDataModel {
   schedule: Schedule;
@@ -15,24 +15,29 @@ interface ImportDataModel {
 
 const UploadDataScreen = () => {
   const [url, setUrl] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
-  const onDataImport = async () => {
-    // TODO: if !url display error
-    fetch(url)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response;
-      })
-      .then(async response => {
-        await handleImport(await response.text());
-      })
-      .catch(error => {
-        console.error(error);
-        Alert.alert('Error fetching file');
-      });
+
+  const handleDataImport = async () => {
+    if (!url) {
+      Alert.alert('Please enter a URL');
+      return;
+    }
+    setIsLoading(true); // disable button and show activity indicator
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const text = await response.text();
+      await handleImport(text);
+    } catch (error) {
+      console.error(error);
+      Alert.alert('Error fetching file');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleImport = async (text: string) => {
@@ -44,7 +49,9 @@ const UploadDataScreen = () => {
       Alert.alert('Invalid JSON');
     }
 
-    model = model!;
+    if (!model) {
+      return;
+    } // exit if invalid JSON
 
     try {
       dispatch(
@@ -55,18 +62,26 @@ const UploadDataScreen = () => {
         }),
       );
       dispatch(addSyllabuses(model.syllabuses));
+      Alert.alert('Import successful');
+      navigation.navigate('AgendaStackAgenda');
     } catch (e) {
       console.error(e);
-      Alert.alert('Error importing the data');
+      Alert.alert('Error importing data');
     }
-    Alert.alert('Import done');
-    navigation.navigate('AgendaStackAgenda');
   };
 
   return (
     <View>
       <TextInput value={url} onChangeText={setUrl} placeholder="Enter URL" />
-      <Button title="Import Data" onPress={onDataImport} />
+      {isLoading ? (
+        <ActivityIndicator />
+      ) : (
+        <Button
+          title="Import Data"
+          onPress={handleDataImport}
+          disabled={!url}
+        />
+      )}
     </View>
   );
 };
