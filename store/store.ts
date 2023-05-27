@@ -4,7 +4,6 @@ import {
   Action,
   combineReducers,
 } from '@reduxjs/toolkit';
-import counterReducer from './reducers/counterReducer';
 import {persistStore, persistReducer} from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
@@ -15,8 +14,8 @@ import {
   REGISTER,
   REHYDRATE,
 } from 'redux-persist/es/constants';
-import todoReducer from './reducers/todoReducer';
 import {syllabusReducer} from './reducers/syllabusReducer';
+import scheduleReducer from './reducers/scheduleReducer';
 
 const persistConfig = {
   key: 'root',
@@ -25,8 +24,7 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   syllabus: syllabusReducer,
-  counter: counterReducer,
-  todos: todoReducer,
+  schedule: scheduleReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
