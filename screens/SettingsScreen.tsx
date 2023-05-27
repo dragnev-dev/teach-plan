@@ -29,8 +29,8 @@ const SettingsScreen = () => {
     setDarkModeEnabled(!darkModeEnabled);
   };
 
-  const handleImportSyllabus = () => {
-    navigation.navigate('UploadSyllabus');
+  const handleImportData = () => {
+    navigation.navigate('Upload Data');
   };
 
   return (
@@ -53,11 +53,8 @@ const SettingsScreen = () => {
         </View>
       </View>
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Import syllabus</Text>
-        <Button title={'Import syllabus'} onPress={handleImportSyllabus} />
-      </View>
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Import schedule</Text>
+        <Text style={styles.sectionTitle}>Import data</Text>
+        <Button title={'Import data'} onPress={handleImportData} />
       </View>
     </View>
   );
