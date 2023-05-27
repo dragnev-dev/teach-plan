@@ -2,7 +2,7 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
 
-import DetailScreen from '../screens/DetailScreen';
+import DetailsScreen from '../screens/DetailsScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import AgendaScreen from '../screens/AgendaScreen';
@@ -17,7 +17,7 @@ const AgendaStack = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen name="AgendaStackAgenda" component={AgendaScreen} />
-      <Stack.Screen name="AgendaStackDetail" component={DetailScreen} />
+      <Stack.Screen name="DetailsScreen" component={DetailsScreen} />
     </Stack.Navigator>
   );
 };
