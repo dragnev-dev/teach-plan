@@ -87,7 +87,7 @@ function getPlaceholderDays(
   key: MutableRefObject<number>,
 ): JSX.Element[] {
   const days: number[] = Array.from(
-    {length: startDay},
+    {length: startDay - 1},
     (_, i: number) => i + 1,
   );
 
