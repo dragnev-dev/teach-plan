@@ -6,10 +6,18 @@ import {getScheduleByDate} from '../store/reducers/scheduleReducer';
 import {TeacherScheduleEntry} from '../models/teacherScheduleEntry';
 import SchoolHour from '../components/SchoolHour';
 import {useNavigation} from '../store/hooks';
+import {RouteProp} from '@react-navigation/native';
 
-const AgendaScreen = () => {
+interface Props {
+  route: RouteProp<{
+    params: {dateString?: string};
+  }>;
+}
+const AgendaScreen: React.FC<Props> = ({route}) => {
   const navigation = useNavigation();
-  const date = new Date('2023-05-30');
+  const date = route.params?.dateString
+    ? new Date(route.params?.dateString)
+    : new Date();
   const dailySchedule =
     useSelector((state: RootState) =>
       getScheduleByDate(state.schedule, date.toDateString()),
@@ -47,4 +55,5 @@ const AgendaScreen = () => {
   );
 };
 
+export type {Props as AgendaScreenProps};
 export default AgendaScreen;
