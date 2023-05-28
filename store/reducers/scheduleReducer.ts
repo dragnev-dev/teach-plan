@@ -86,6 +86,21 @@ export function getScheduleByDate(
   return state.teacherSchedule[date];
 }
 
+export function getScheduleByMonth(
+  state: ScheduleState,
+  year: number,
+  month: number,
+  daysInMonth: number,
+): TeacherScheduleEntry[][] {
+  let vals: TeacherScheduleEntry[][] = [];
+  for (let day = 1; day <= daysInMonth; day++) {
+    vals.push(
+      state.teacherSchedule[new Date(`${year}-${month}-${day}`).toDateString()],
+    );
+  }
+  return vals;
+}
+
 export function getSchoolHourForDate(
   state: ScheduleState,
   date: string,
