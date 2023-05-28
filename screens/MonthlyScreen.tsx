@@ -10,7 +10,7 @@ import {NavigationProp} from '@react-navigation/native';
 
 function MonthlyScreen(): JSX.Element {
   const navigation = useNavigation();
-  const d: Date = new Date('2023-04-01');
+  const d: Date = new Date();
   const monthI: number = d.getMonth();
   const year: number = d.getFullYear();
   const daysInMonth: number = getDaysInMonth(monthI, year);
@@ -59,14 +59,15 @@ function buildDaysList(
     (_, i: number) => i + 1,
   );
   const daysList: JSX.Element[] = days.map((day: number) => {
-    let dayEntries: TeacherScheduleEntry[] = monthlySchedule[day];
+    daysKey.current++;
+    let dayEntries: TeacherScheduleEntry[] = monthlySchedule[day - 1];
     return (
       <MonthDay
         navigation={navigation}
         isoStringDate={`${year}-${monthI + 1}-${day}`}
         number={day}
         schoolHours={dayEntries}
-        key={day}
+        key={daysKey.current}
       />
     );
   });
@@ -92,6 +93,7 @@ function getPlaceholderDays(
   );
 
   return days.map(() => {
+    key.current++;
     return <MonthDay key={key.current} isPlaceholder={true} />;
   });
 }
