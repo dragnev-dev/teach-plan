@@ -11,27 +11,13 @@ import {NavigationProp} from '@react-navigation/native';
 import {SCREENS} from '../navigation/AppNavigator';
 
 interface MonthDayProps {
-  navigation?: NavigationProp<
-    ReactNavigation.RootParamList,
-    never,
-    undefined,
-    Readonly<{
-      key: string;
-      index: number;
-      routeNames: never[];
-      history?: unknown[] | undefined;
-      routes: any;
-      type: string;
-      stale: false;
-    }>,
-    {},
-    {}
-  > | null;
+  navigation?: NavigationProp<any> | null;
   isoStringDate?: string;
   number?: number;
   schoolHours?: TeacherScheduleEntry[];
   key: number;
   isPlaceholder?: boolean;
+  isActive?: boolean;
 }
 
 const MonthDay: React.NamedExoticComponent<MonthDayProps> = memo(
@@ -42,6 +28,7 @@ const MonthDay: React.NamedExoticComponent<MonthDayProps> = memo(
     schoolHours,
     key,
     isPlaceholder = false,
+    isActive = false,
   }: MonthDayProps): JSX.Element => {
     const containerWidth: number = useMemo(() => {
       return (Dimensions.get('window').width - 59) / 7;
@@ -51,6 +38,23 @@ const MonthDay: React.NamedExoticComponent<MonthDayProps> = memo(
         dateString: isoStringDate,
       });
     };
+
+    const styles = StyleSheet.create({
+      day: {
+        height: 63,
+        padding: 5,
+        marginHorizontal: 3,
+        marginVertical: 3,
+      },
+      dayActive: {
+        backgroundColor: 'white',
+        borderRadius: 10,
+      },
+      dayText: {
+        fontWeight: 'bold',
+        color: isActive ? 'lightblue' : 'gray',
+      },
+    });
     if (isPlaceholder) {
       return <View key={key} style={[styles.day, {width: containerWidth}]} />;
     }
@@ -73,7 +77,8 @@ const MonthDay: React.NamedExoticComponent<MonthDayProps> = memo(
         style={[styles.day, {width: containerWidth}, styles.dayActive]}>
         {/* style={styles.item} */}
         <View key={key}>
-          <Text style={styles.dayText}>
+          <Text
+            style={[styles.dayText, {color: isActive ? 'blue' : 'inherit'}]}>
             {`${number}. `}
             {/* day text */}
             {/* some placeholder if there are any entries */}
@@ -84,27 +89,5 @@ const MonthDay: React.NamedExoticComponent<MonthDayProps> = memo(
     );
   },
 );
-
-const styles = StyleSheet.create({
-  day: {
-    // width: '14.2%', // no margin
-    height: 63,
-    // justifyContent: 'center',
-    // alignItems: 'center',
-    padding: 5,
-    marginHorizontal: 3,
-    marginVertical: 3,
-  },
-  dayActive: {
-    // borderStyle: 'solid',
-    // borderColor: 'lightgray',
-    // borderWidth: 1,
-    backgroundColor: 'white',
-    borderRadius: 10,
-  },
-  dayText: {
-    fontWeight: 'bold',
-  },
-});
 
 export default MonthDay;
