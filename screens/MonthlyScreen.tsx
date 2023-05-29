@@ -6,14 +6,23 @@ import {getScheduleByMonth} from '../store/reducers/scheduleReducer';
 import {useNavigation} from '../store/hooks';
 import MonthDay from '../components/MonthDay';
 import {TeacherScheduleEntry} from '../models/teacherScheduleEntry';
-import {NavigationProp} from '@react-navigation/native';
+import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {getUserLocale} from '../utils/getUserLocale';
 
-interface Props {}
+interface Props {
+  route: RouteProp<{
+    params: {dateString?: string};
+  }>;
+}
 
-const MonthlyScreen: React.FC<Props> = () => {
+const MonthlyScreen: React.FC<Props> = ({route}) => {
   const navigation = useNavigation();
-  const selectedDate = useMemo(() => new Date(), []);
+  const selectedDate: Date = useMemo(() => {
+    return route.params?.dateString
+      ? new Date(route.params.dateString)
+      : new Date();
+  }, [route.params?.dateString]);
+
   const {date, month, year} = useMemo(
     () => ({
       date: selectedDate.getDate(),
@@ -51,6 +60,7 @@ const MonthlyScreen: React.FC<Props> = () => {
   const daysList = buildDaysList(
     year,
     month,
+    daysInMonth,
     daysKey,
     monthlySchedule,
     cDate,
@@ -65,6 +75,7 @@ const MonthlyScreen: React.FC<Props> = () => {
 function buildDaysList(
   year: number,
   month: number,
+  daysInMonth: number,
   daysKey: MutableRefObject<number>,
   monthlySchedule: TeacherScheduleEntry[][],
   currentDate: number,
@@ -72,7 +83,6 @@ function buildDaysList(
   currentYear: number,
   navigation: NavigationProp<any>,
 ): JSX.Element[] {
-  const daysInMonth = getDaysInMonth(month, year);
   const startDay = getDayOfFirstDayOfMonth(year, month);
   const placeholderDays = getPlaceholderDays(startDay, daysKey);
   const daysList = getMonthDays(
