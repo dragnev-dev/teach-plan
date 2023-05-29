@@ -1,5 +1,5 @@
 import {StyleSheet, View} from 'react-native';
-import React, {MutableRefObject, useRef} from 'react';
+import React, {MutableRefObject, useMemo, useRef} from 'react';
 import {useSelector} from 'react-redux';
 import {RootState} from '../store/store';
 import {getScheduleByMonth} from '../store/reducers/scheduleReducer';
@@ -7,13 +7,23 @@ import {useNavigation} from '../store/hooks';
 import MonthDay from '../components/MonthDay';
 import {TeacherScheduleEntry} from '../models/teacherScheduleEntry';
 import {NavigationProp} from '@react-navigation/native';
+import {getUserLocale} from '../utils/getUserLocale';
 
 function MonthlyScreen(): JSX.Element {
   const navigation = useNavigation();
-  const d: Date = new Date();
+  const d: Date = useMemo(() => new Date(), []);
   const monthI: number = d.getMonth();
   const year: number = d.getFullYear();
   const daysInMonth: number = getDaysInMonth(monthI, year);
+  React.useEffect(() => {
+    // Update header bar title on component mount
+    navigation.setOptions({
+      title: `${d.toLocaleString(getUserLocale(), {
+        month: 'long',
+        year: 'numeric',
+      })}`,
+    });
+  }, [navigation, d]);
   const daysKey: React.MutableRefObject<number> = useRef<number>(1);
   const monthlySchedule: TeacherScheduleEntry[][] =
     useSelector((state: RootState) =>
