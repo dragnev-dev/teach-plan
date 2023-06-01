@@ -62,11 +62,11 @@ const UploadDataScreen = () => {
       );
       dispatch(addSyllabuses(model.syllabuses));
       Alert.alert('Import successful');
-      navigation.navigate('Agenda');
     } catch (e) {
       console.error(e);
       Alert.alert('Error importing data');
     }
+    navigation.navigate('Agenda');
   };
 
   return (
