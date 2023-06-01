@@ -52,7 +52,7 @@ const MonthDay: React.NamedExoticComponent<MonthDayProps> = memo(
       },
       dayText: {
         fontWeight: 'bold',
-        color: isActive ? 'lightblue' : 'gray',
+        color: isActive ? '#1e96f0' : 'gray',
       },
     });
     if (isPlaceholder) {
@@ -77,8 +77,7 @@ const MonthDay: React.NamedExoticComponent<MonthDayProps> = memo(
         style={[styles.day, {width: containerWidth}, styles.dayActive]}>
         {/* style={styles.item} */}
         <View key={key}>
-          <Text
-            style={[styles.dayText, {color: isActive ? 'blue' : 'inherit'}]}>
+          <Text style={styles.dayText}>
             {`${number}. `}
             {/* day text */}
             {/* some placeholder if there are any entries */}
