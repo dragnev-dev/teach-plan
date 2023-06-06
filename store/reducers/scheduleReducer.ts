@@ -203,11 +203,26 @@ function findSchoolDay(
   schedule: Schedule,
   date: Date,
 ): {class: number; subclass: string | undefined; schoolHours: SchoolHour[]}[] {
-  var schoolDay = schedule.classes.flatMap(function (classSchedule) {
-    var _a, _b;
-    var classNumber = classSchedule.class,
+  const schoolDay: {
+    schoolHours: any;
+    subclass: string | undefined;
+    class: number;
+  }[] = schedule.classes.flatMap(function (classSchedule) {
+    let _a, _b;
+    const classNumber = classSchedule.class,
       subclass = classSchedule.subclass,
+      termEndDate = classSchedule.termEndDate,
       days = classSchedule.days;
+    // Calculate the end date for the class
+    let endDate: Date;
+    if (termEndDate) {
+      // TODO: don't parse termEndDate n times, parse it in advance, parse it only once
+      endDate = new Date(termEndDate);
+      // If the given date is after the end date of the class, return an empty array
+      if (date > endDate) {
+        return [];
+      }
+    }
     return {
       class: classNumber,
       subclass: subclass,
