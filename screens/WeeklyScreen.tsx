@@ -1,67 +1,121 @@
-import React, {useState} from 'react';
-import { StyleSheet, View, Animated, GestureResponderEvent } from 'react-native';
+import React, {
+  MutableRefObject,
+  ReactElement,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import {StyleSheet, View} from 'react-native';
+import {NavigationProp} from '@react-navigation/native';
+import MonthDay from '../components/MonthDay';
+import {useNavigation} from '../store/hooks';
+import {useSelector} from 'react-redux';
+import {RootState} from '../store/store';
+import {getScheduleForWeek} from '../store/reducers/scheduleReducer';
+import {SchoolDay} from '../models/schoolDay';
 
 const WeeklyScreen = () => {
-  const d: Date = new Date();
-  const [startY, setStartY] = useState(0);
+  const navigation = useNavigation();
+  const [d, setDate] = useState(useMemo(() => new Date(), []));
   const [week, setWeek] = useState(getISOWeekNumber(d));
-  const [swipeAnim] = useState(new Animated.Value(0));
+  const {cDate, cMonth, cYear} = useMemo(() => {
+    const currentDate = new Date();
+    return {
+      cDate: currentDate.getDate(),
+      cMonth: currentDate.getMonth(),
+      cYear: currentDate.getFullYear(),
+    };
+  }, []);
 
-  const handleTouchStart = (event: GestureResponderEvent) => {
-    setStartY(event.nativeEvent.pageY);
-    swipeAnim.setValue(0);
-  };
+  const days = useMemo(() => getDaysOfWeek(d), [d]);
 
-  const handleTouchEnd = (event: GestureResponderEvent) => {
-    const endY = event.nativeEvent.pageY;
-    const scrollDist = endY - startY;
-    if (Math.abs(scrollDist) > 100) {
-      const scrollingDown = scrollDist > 0;
-      if (Math.abs(scrollDist) > 150) {
-        setWeek(week + (scrollingDown ? -1 : 1));
-      }
-      const animToValue = scrollingDown ? -1 : 1;
-      Animated.timing(swipeAnim, {
-        toValue: animToValue,
-        duration: 250,
-        useNativeDriver: true,
-      }).start(() => {
-        // Bounce-back animation
-        Animated.spring(swipeAnim, {
-          toValue: 0,
-          friction: 100, //5,
-          tension: 100,
-          useNativeDriver: true,
-        }).start();
-      });
-    } else {
-      swipeAnim.setValue(0);
-    }
-  };
-
-  const counterStyle = [
-    styles.counter,
-    {
-      transform: [
-        {
-          translateY: swipeAnim.interpolate({
-            inputRange: [-1, 0, 1],
-            outputRange: [-50, 0, 50],
-          }),
-        },
-      ],
-    },
-  ];
+  const daysKey = useRef<number>(1);
+  const weeklySchedule: SchoolDay[] =
+    useSelector((state: RootState) =>
+      getScheduleForWeek(
+        state.schedule,
+        days.map(dm => dm.string),
+      ),
+    ) ?? [];
+  const daysList = buildDaysList(
+    days,
+    daysKey,
+    weeklySchedule,
+    cDate,
+    cMonth,
+    cYear,
+    navigation,
+  );
 
   return (
-    <View
-      style={styles.container}
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}>
-      <Animated.Text style={counterStyle}>Week {week}</Animated.Text>
+    <View>
+      <View style={styles.container}>
+        {/*<Text>Week {week}</Text>*/}
+        {daysList}
+      </View>
     </View>
   );
 };
+
+function buildDaysList(
+  days: {date: number; month: number; year: number; string: string}[],
+  key: MutableRefObject<number>,
+  weeklySchedule: SchoolDay[],
+  currentDate: number,
+  currentMonth: number,
+  currentYear: number,
+  navigation: NavigationProp<any>,
+): ReactElement[] {
+  let count = 0;
+  const daysList: ReactElement[] = days.map(
+    (day: {date: number; month: number; year: number; string: string}) => {
+      key.current++;
+      let schoolDay: SchoolDay = weeklySchedule[count];
+      count++;
+      return (
+        <MonthDay
+          navigation={navigation}
+          isoStringDate={day.string}
+          number={day.date}
+          schoolDay={schoolDay}
+          key={key.current}
+          isActive={
+            day.date === currentDate &&
+            day.month === currentMonth &&
+            day.year === currentYear
+          }
+        />
+      );
+    },
+  );
+
+  return daysList;
+}
+function getDaysOfWeek(
+  date: Date,
+): {date: number; month: number; year: number; string: string}[] {
+  // const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  const result: {date: number; month: number; year: number; string: string}[] =
+    [];
+
+  // Find the date of the Monday in the same week as the input date
+  const monday = new Date(date);
+  monday.setDate(monday.getDate() - ((monday.getDay() + 6) % 7));
+
+  // Add each day of the week to the result array
+  for (let i = 0; i < 7; i++) {
+    const day = new Date(monday);
+    day.setDate(day.getDate() + i);
+    result.push({
+      date: day.getDate(),
+      month: day.getMonth(),
+      year: day.getFullYear(),
+      string: day.toISOString().slice(0, 10),
+    });
+  }
+
+  return result;
+}
 
 function getISOWeekNumber(date: Date): number {
   const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
@@ -72,12 +126,10 @@ function getISOWeekNumber(date: Date): number {
 
 const styles = StyleSheet.create({
   container: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     flex: 1,
     justifyContent: 'center',
-  },
-  counter: {
-    fontSize: 20,
-    textAlign: 'center',
   },
 });
 

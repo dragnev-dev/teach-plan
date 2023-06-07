@@ -1,9 +1,11 @@
 import {SyllabusEntry} from './syllabus';
+import {NonSchooling} from './nonSchooling';
 
 export interface TeacherScheduleEntry {
   class: number;
   subclass: string;
   subject: string;
   schoolHour: number;
-  syllabusEntry: SyllabusEntry;
+  isNonSchoolHour?: NonSchooling;
+  syllabusEntry?: SyllabusEntry;
 }

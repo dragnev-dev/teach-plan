@@ -24,14 +24,14 @@ export interface StudentClassSchedule {
   class: number;
   termEndDate?: string;
   subclass?: string;
-  days: SchoolDay[];
+  days: ScheduleSchoolDay[];
   nonSchoolDays?: {[key: string]: string};
 }
 
 // Represents the schedule for one day
 // number: number day of the week (1-5)
 // hours: SchoolHour[] the school hour (class)
-export interface SchoolDay {
+export interface ScheduleSchoolDay {
   number: number;
   hours: SchoolHour[];
 }

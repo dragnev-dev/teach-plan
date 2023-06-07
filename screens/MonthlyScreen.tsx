@@ -1,13 +1,20 @@
-import {StyleSheet, View} from 'react-native';
-import React, {MutableRefObject, useMemo, useRef, useEffect} from 'react';
+import {View, StyleSheet} from 'react-native';
+import React, {
+  MutableRefObject,
+  useMemo,
+  useRef,
+  useEffect,
+  useState,
+  ReactElement,
+} from 'react';
 import {useSelector} from 'react-redux';
 import {RootState} from '../store/store';
 import {getScheduleByMonth} from '../store/reducers/scheduleReducer';
 import {useNavigation} from '../store/hooks';
 import MonthDay from '../components/MonthDay';
-import {TeacherScheduleEntry} from '../models/teacherScheduleEntry';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {getUserLocale} from '../utils/getUserLocale';
+import {SchoolDay} from '../models/schoolDay';
 
 interface Props {
   route: RouteProp<{
@@ -31,7 +38,7 @@ const MonthlyScreen: React.FC<Props> = ({route}) => {
     }),
     [selectedDate],
   );
-  const currentDate = useMemo(() => new Date(), []);
+  const [currentDate, setDate] = useState(useMemo(() => new Date(), []));
   const {cDate, cMonth, cYear} = useMemo(
     () => ({
       cDate: currentDate.getDate(),
@@ -45,18 +52,17 @@ const MonthlyScreen: React.FC<Props> = ({route}) => {
   useEffect(() => {
     // Update header bar title on component mount
     navigation.setOptions({
-      title: `${date.toLocaleString(getUserLocale(), {
+      title: `${selectedDate.toLocaleString(getUserLocale(), {
         month: 'long',
         year: 'numeric',
       })}`,
     });
-  }, [navigation, date]);
+  }, [navigation, selectedDate]);
 
   const daysKey = useRef<number>(1);
-  const monthlySchedule: TeacherScheduleEntry[][] =
-    useSelector((state: RootState) =>
-      getScheduleByMonth(state.schedule, year, month + 1, daysInMonth),
-    ) ?? [];
+  const monthlySchedule: SchoolDay[] = useSelector((state: RootState) =>
+    getScheduleByMonth(state.schedule, year, month + 1, daysInMonth),
+  );
   const daysList = buildDaysList(
     year,
     month,
@@ -68,7 +74,6 @@ const MonthlyScreen: React.FC<Props> = ({route}) => {
     cYear,
     navigation,
   );
-
   return <View style={styles.monthContainer}>{daysList}</View>;
 };
 
@@ -77,12 +82,12 @@ function buildDaysList(
   month: number,
   daysInMonth: number,
   daysKey: MutableRefObject<number>,
-  monthlySchedule: TeacherScheduleEntry[][],
+  monthlySchedule: SchoolDay[],
   currentDate: number,
   currentMonth: number,
   currentYear: number,
   navigation: NavigationProp<any>,
-): JSX.Element[] {
+): ReactElement[] {
   const startDay = getDayOfFirstDayOfMonth(year, month);
   const placeholderDays = getPlaceholderDays(startDay, daysKey);
   const daysList = getMonthDays(
@@ -111,7 +116,7 @@ function getDayOfFirstDayOfMonth(year: number, month: number): number {
 function getPlaceholderDays(
   startDay: number,
   key: MutableRefObject<number>,
-): JSX.Element[] {
+): ReactElement[] {
   const days: number[] = Array.from(
     {length: startDay - 1},
     (_, i: number) => i + 1,
@@ -128,27 +133,26 @@ function getMonthDays(
   year: number,
   monthI: number,
   daysInMonth: number,
-  monthlySchedule: TeacherScheduleEntry[][],
+  monthlySchedule: SchoolDay[],
   currentDay: number,
   currentMonth: number,
   currentYear: number,
   key: MutableRefObject<number>,
-): JSX.Element[] {
+): ReactElement[] {
   const days: number[] = Array.from(
     {length: daysInMonth},
     (_, i: number) => i + 1,
   );
-  const daysList: JSX.Element[] = days.map((day: number) => {
+  const daysList: ReactElement[] = days.map((day: number) => {
     key.current++;
-    let dayEntries: TeacherScheduleEntry[] = monthlySchedule[day - 1];
+    let schoolDay: SchoolDay = monthlySchedule[day - 1];
     return (
       <MonthDay
         navigation={navigation}
         isoStringDate={`${year}-${monthI + 1}-${day}`}
         number={day}
-        schoolHours={dayEntries}
+        schoolDay={schoolDay}
         key={key.current}
-        // TODO: check year as well
         isActive={
           day === currentDay && monthI === currentMonth && year === currentYear
         }

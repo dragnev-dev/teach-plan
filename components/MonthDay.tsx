@@ -1,4 +1,4 @@
-import React, {memo, useMemo} from 'react';
+import React, {memo, ReactElement, useMemo} from 'react';
 import {
   Dimensions,
   StyleSheet,
@@ -6,15 +6,15 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {TeacherScheduleEntry} from '../models/teacherScheduleEntry';
 import {NavigationProp} from '@react-navigation/native';
 import {SCREENS} from '../navigation/AppNavigator';
+import {SchoolDay} from '../models/schoolDay';
 
 interface MonthDayProps {
   navigation?: NavigationProp<any> | null;
   isoStringDate?: string;
   number?: number;
-  schoolHours?: TeacherScheduleEntry[];
+  schoolDay?: SchoolDay;
   key: number;
   isPlaceholder?: boolean;
   isActive?: boolean;
@@ -25,11 +25,11 @@ const MonthDay: React.NamedExoticComponent<MonthDayProps> = memo(
     navigation,
     isoStringDate,
     number,
-    schoolHours,
+    schoolDay,
     key,
     isPlaceholder = false,
     isActive = false,
-  }: MonthDayProps): JSX.Element => {
+  }: MonthDayProps): ReactElement => {
     const containerWidth: number = useMemo(() => {
       return (Dimensions.get('window').width - 59) / 7;
     }, []);
@@ -38,6 +38,9 @@ const MonthDay: React.NamedExoticComponent<MonthDayProps> = memo(
         dateString: isoStringDate,
       });
     };
+    const schoolHoursLength = schoolDay?.entries.filter(
+      e => !e.isNonSchoolHour,
+    ).length;
 
     const styles = StyleSheet.create({
       day: {
@@ -54,11 +57,27 @@ const MonthDay: React.NamedExoticComponent<MonthDayProps> = memo(
         fontWeight: 'bold',
         color: isActive ? '#1e96f0' : 'gray',
       },
+      dayNonSchooling: {
+        backgroundColor: 'red',
+        borderRadius: 10,
+      },
     });
     if (isPlaceholder) {
       return <View key={key} style={[styles.day, {width: containerWidth}]} />;
     }
-    if (!schoolHours) {
+    if (schoolDay?.nonSchoolingDay) {
+      return (
+        <TouchableOpacity
+          onPress={() => handleScheduleEntryPress()}
+          key={key}
+          style={[styles.day, {width: containerWidth}, styles.dayNonSchooling]}>
+          <View key={key}>
+            <Text style={styles.dayText}>{`${number}. `}</Text>
+          </View>
+        </TouchableOpacity>
+      );
+    }
+    if (!schoolDay || !schoolHoursLength) {
       return (
         <TouchableOpacity
           onPress={() => handleScheduleEntryPress()}
@@ -82,7 +101,7 @@ const MonthDay: React.NamedExoticComponent<MonthDayProps> = memo(
             {/* day text */}
             {/* some placeholder if there are any entries */}
           </Text>
-          <Text>{schoolHours.length}</Text>
+          <Text>{schoolHoursLength}</Text>
         </View>
       </TouchableOpacity>
     );

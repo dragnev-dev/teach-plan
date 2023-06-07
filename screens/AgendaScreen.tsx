@@ -1,4 +1,4 @@
-import {ScrollView} from 'react-native';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import React, {useMemo} from 'react';
 import {RootState} from '../store/store';
 import {useSelector} from 'react-redux';
@@ -34,15 +34,14 @@ const AgendaScreen: React.FC<Props> = ({route}) => {
     });
   }, [navigation, date]);
 
-  const dailySchedule =
-    useSelector((state: RootState) =>
-      getScheduleByDate(state.schedule, date.toDateString()),
-    ) ?? [];
+  const schoolDay = useSelector((state: RootState) =>
+    getScheduleByDate(state.schedule, date.toDateString()),
+  );
 
   const renderAgendaEntries = (entries: TeacherScheduleEntry[]) => {
     entries.sort((a, b) => a.schoolHour - b.schoolHour);
     const entriesElements = [];
-    // TODO: magic numbers. Take care of the logic here
+    // TODO: magic numbers. Max number of hours into the state upon schedule import
     for (let i = 1; i <= 7; i++) {
       let entry = entries.find(e => e.schoolHour === i);
       entriesElements.push(
@@ -57,9 +56,43 @@ const AgendaScreen: React.FC<Props> = ({route}) => {
     }
     return entriesElements;
   };
-
-  return <ScrollView>{renderAgendaEntries(dailySchedule)}</ScrollView>;
+  if (schoolDay?.nonSchoolingDay) {
+    return (
+      <View style={styles.nonSchoolingDay}>
+        <Text style={styles.title}>Неучебен ден</Text>
+        <Text style={styles.text}>{schoolDay.nonSchoolingDay.reason}</Text>
+      </View>
+    );
+  }
+  return (
+    <ScrollView>{renderAgendaEntries(schoolDay?.entries ?? [])}</ScrollView>
+  );
 };
 
-export type {Props as AgendaScreenProps};
+const styles = StyleSheet.create({
+  nonSchoolingDay: {
+    flex: 1,
+    alignItems: 'center',
+    gap: 16,
+    backgroundColor: '#dcdcdc',
+    padding: 19,
+  },
+  title: {
+    textAlign: 'center',
+    fontSize: 24,
+    backgroundColor: 'white',
+    width: '100%',
+    padding: 20,
+    borderRadius: 10,
+  },
+  text: {
+    textAlign: 'center',
+    width: '100%',
+    fontSize: 20,
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+  },
+});
+
 export default AgendaScreen;

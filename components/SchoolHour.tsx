@@ -1,4 +1,4 @@
-import React, {PropsWithChildren} from 'react';
+import React, {PropsWithChildren, ReactElement} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {TeacherScheduleEntry} from '../models/teacherScheduleEntry';
 import {NavigationProp} from '@react-navigation/native';
@@ -34,7 +34,7 @@ function SchoolHour({
   number,
   schoolHour,
   key,
-}: SectionProps): JSX.Element {
+}: SectionProps): ReactElement {
   if (!schoolHour) {
     return (
       <View style={styles.item} key={key}>
@@ -49,6 +49,17 @@ function SchoolHour({
       key: {date: date.toDateString(), hour: number},
     });
   };
+  if (schoolHour.isNonSchoolHour?.isNonSchooling) {
+    return (
+      <View style={[styles.item, styles.nonSchooling]}>
+        <Text style={styles.classText}>
+          <Text style={styles.schoolHourText}>{`${schoolHour.schoolHour}. `}</Text>
+          {`${schoolHour.class}${schoolHour.subclass}`}
+        </Text>
+        <Text>{schoolHour.isNonSchoolHour.reason}</Text>
+      </View>
+    );
+  }
   return (
     <TouchableOpacity onPress={() => handleScheduleEntryPress()} key={key}>
       <View style={styles.item}>
@@ -57,7 +68,7 @@ function SchoolHour({
             style={styles.schoolHourText}>{`${schoolHour.schoolHour}. `}</Text>
           {`${schoolHour.class}${schoolHour.subclass}`}
         </Text>
-        <HTMLView value={schoolHour.syllabusEntry.topicName} />
+        <HTMLView value={schoolHour.syllabusEntry?.topicName} />
       </View>
     </TouchableOpacity>
   );
@@ -69,6 +80,9 @@ const styles = StyleSheet.create({
     padding: 20,
     marginVertical: 8,
     marginHorizontal: 16,
+  },
+  nonSchooling: {
+    backgroundColor: '#dcdcdc',
   },
   schoolHourText: {
     fontWeight: 'bold',
