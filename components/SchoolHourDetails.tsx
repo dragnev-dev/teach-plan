@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {TeacherScheduleEntry} from '../models/teacherScheduleEntry';
 import HTMLView from 'react-native-htmlview';
 
@@ -23,22 +23,33 @@ export function SchoolHourDetails(props: ScheduleItemProps) {
     week,
   } = syllabusEntry;
 
-  console.debug(syllabusEntry);
-
   return (
     <View>
-      <HTMLView value={`<p>${topicName}</p>`} stylesheet={topicStyles} />
-      <HTMLView value={lessonUnit} stylesheet={topicStyles} />
-      <HTMLView value={expectedResults} />
-      <HTMLView value={methodsAndWorkForms} />
+      <HTMLView value={`<h1>${topicName}</h1>`} stylesheet={htmlStyles} />
+      <Text style={styles.title}>Тип на урока</Text>
+      <HTMLView value={`<p>${lessonUnit}</p>`} stylesheet={htmlStyles} />
+      <Text style={styles.title}>Очаквани резултати</Text>
+      <HTMLView value={`<p>${expectedResults}</p>`} stylesheet={htmlStyles} />
+      <Text style={styles.title}>Методи на работа и форми</Text>
+      <HTMLView value={`<p>${methodsAndWorkForms}</p>`} stylesheet={htmlStyles} />
     </View>
   );
 }
 
-const topicStyles = StyleSheet.create({
+const styles = StyleSheet.create({
+  title: {
+    fontSize: 24,
+    marginVertical: 8,
+  },
+});
+
+const htmlStyles = StyleSheet.create({
+  h1: {
+    fontSize: 28,
+    paddingTop: 0,
+    marginBottom: 0,
+  },
   p: {
     fontSize: 18,
-    marginTop: 16,
-    marginBottom: 8,
   },
 });
