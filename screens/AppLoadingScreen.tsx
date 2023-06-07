@@ -1,7 +1,7 @@
 import {Text} from 'react-native';
-import React from 'react';
+import React, {ReactElement} from 'react';
 
-function AppLoadingScreen(): JSX.Element {
+function AppLoadingScreen(): ReactElement {
   return <Text>Loading...</Text>;
 }
 

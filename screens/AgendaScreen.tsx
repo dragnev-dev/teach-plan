@@ -4,17 +4,17 @@ import {RootState} from '../store/store';
 import {useSelector} from 'react-redux';
 import {getScheduleByDate} from '../store/reducers/scheduleReducer';
 import {TeacherScheduleEntry} from '../models/teacherScheduleEntry';
-import SchoolHour from '../components/SchoolHour';
+import AgendaSchoolHour from '../components/AgendaSchoolHour';
 import {useNavigation} from '../store/hooks';
 import {RouteProp} from '@react-navigation/native';
 import {getUserLocale} from '../utils/getUserLocale';
 
-interface Props {
+interface AgendaScreenProps {
   route: RouteProp<{
     params: {dateString?: string};
   }>;
 }
-const AgendaScreen: React.FC<Props> = ({route}) => {
+const AgendaScreen: React.FC<AgendaScreenProps> = ({route}) => {
   const navigation = useNavigation();
   const date: Date = useMemo(() => {
     return route.params?.dateString
@@ -45,7 +45,7 @@ const AgendaScreen: React.FC<Props> = ({route}) => {
     for (let i = 1; i <= 7; i++) {
       let entry = entries.find(e => e.schoolHour === i);
       entriesElements.push(
-        SchoolHour({
+        AgendaSchoolHour({
           navigation,
           date: date,
           number: i,

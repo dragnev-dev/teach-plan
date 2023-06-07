@@ -3,11 +3,11 @@ import {StyleSheet, Text, View} from 'react-native';
 import {TeacherScheduleEntry} from '../models/teacherScheduleEntry';
 import HTMLView from 'react-native-htmlview';
 
-interface ScheduleItemProps {
+interface SchoolHourSyllabusDetailsProps {
   scheduleEntry: TeacherScheduleEntry;
 }
 
-export function SchoolHourDetails(props: ScheduleItemProps) {
+export function SchoolHourSyllabusDetails(props: SchoolHourSyllabusDetailsProps) {
   const {
     class: classNumber,
     subclass,

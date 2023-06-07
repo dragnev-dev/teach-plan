@@ -5,7 +5,7 @@ import {RootState} from '../store/store';
 import {getSchoolHourForDate} from '../store/reducers/scheduleReducer';
 import {RouteProp} from '@react-navigation/native';
 import {useNavigation} from '../store/hooks';
-import {SchoolHourDetails} from '../components/SchoolHourDetails';
+import {SchoolHourSyllabusDetails} from '../components/SchoolHourSyllabusDetails';
 
 interface DetailsScreenProps {
   route: RouteProp<{
@@ -39,7 +39,7 @@ export const DetailsScreen: React.FC<DetailsScreenProps> = ({route}) => {
     <View
       style={styles.container}
       key={`${route.params.key.date}-${route.params.key.hour}`}>
-      <SchoolHourDetails scheduleEntry={syllabusEntry!} />
+      <SchoolHourSyllabusDetails scheduleEntry={syllabusEntry!} />
     </View>
   );
 };

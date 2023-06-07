@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 import {StyleSheet, View} from 'react-native';
 import {NavigationProp} from '@react-navigation/native';
-import MonthDay from '../components/MonthDay';
+import MonthlySchoolDay from '../components/MonthlySchoolDay';
 import {useNavigation} from '../store/hooks';
 import {useSelector} from 'react-redux';
 import {RootState} from '../store/store';
@@ -73,7 +73,7 @@ function buildDaysList(
       let schoolDay: SchoolDay = weeklySchedule[count];
       count++;
       return (
-        <MonthDay
+        <MonthlySchoolDay
           navigation={navigation}
           isoStringDate={day.string}
           number={day.date}

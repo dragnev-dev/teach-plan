@@ -5,7 +5,7 @@ import {NavigationProp} from '@react-navigation/native';
 import HTMLView from 'react-native-htmlview';
 import {SCREENS} from '../navigation/AppNavigator';
 
-type SectionProps = PropsWithChildren<{
+type AgendaSchoolHourProps = PropsWithChildren<{
   navigation: NavigationProp<
     ReactNavigation.RootParamList,
     never,
@@ -28,13 +28,13 @@ type SectionProps = PropsWithChildren<{
   key: number;
 }>;
 
-function SchoolHour({
+function AgendaSchoolHour({
   navigation,
   date,
   number,
   schoolHour,
   key,
-}: SectionProps): ReactElement {
+}: AgendaSchoolHourProps): ReactElement {
   if (!schoolHour) {
     return (
       <View style={styles.item} key={key}>
@@ -97,4 +97,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SchoolHour;
+export default AgendaSchoolHour;

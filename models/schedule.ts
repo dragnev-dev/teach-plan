@@ -30,7 +30,7 @@ export interface StudentClassSchedule {
 
 // Represents the schedule for one day
 // number: number day of the week (1-5)
-// hours: SchoolHour[] the school hour (class)
+// hours: ScheduleSchoolDay[] the school hour (class)
 export interface ScheduleSchoolDay {
   number: number;
   hours: SchoolHour[];
