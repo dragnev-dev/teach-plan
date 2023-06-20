@@ -42,69 +42,124 @@ const MonthlySchoolDay: React.NamedExoticComponent<MonthDayProps> = memo(
       e => !e.isNonSchoolHour,
     ).length;
 
+    const nonSchoolHourColor = '#e53d2e';
+    const nonSchoolHourColorSelected = '#d53b2e';
+    const dayActiveColor = '#008af3';
+    const dayActiveColorSelected = '#e3e5e7';
+
     const styles = StyleSheet.create({
-      day: {
+      daySkeleton: {
         height: 63,
         padding: 5,
         marginHorizontal: 3,
         marginVertical: 3,
       },
-      dayActive: {
+      day: {
         backgroundColor: 'white',
         borderRadius: 10,
       },
       dayText: {
         fontWeight: 'bold',
-        color: isActive ? '#1e96f0' : 'gray',
+        color: 'black',
       },
       dayNonSchooling: {
-        backgroundColor: 'red',
+        backgroundColor: nonSchoolHourColor,
         borderRadius: 10,
       },
+      schoolHour: {
+        height: 5,
+        width: '100%',
+        backgroundColor: dayActiveColor,
+        borderRadius: 3,
+        marginBottom: 1,
+      },
+      dayActive: {
+        backgroundColor: schoolDay?.nonSchoolingDay?.isNonSchooling
+          ? nonSchoolHourColorSelected
+          : dayActiveColorSelected,
+        borderRadius: 10,
+        borderStyle: 'solid',
+        borderColor: 'black',
+        borderWidth: 0.75,
+      },
     });
+
+    function getWorkDay() {
+      function getSchoolHourPills(amount: number) {
+        // show no more than 6 pills
+        if (amount > 6) {
+          amount = 6;
+        }
+        let numbers = Array.from({length: amount}, (_, i: number) => i + 1);
+        return numbers.map(() => <View style={styles.schoolHour} />);
+      }
+
+      return (
+        <TouchableOpacity
+          onPress={() => handleScheduleEntryPress()}
+          key={key}
+          style={[
+            styles.daySkeleton,
+            {width: containerWidth},
+            isActive ? styles.dayActive : styles.day,
+          ]}>
+          <View key={key}>
+            <Text style={styles.dayText}>{`${number}. `}</Text>
+            {getSchoolHourPills(schoolHoursLength!)}
+          </View>
+        </TouchableOpacity>
+      );
+    }
+
+    function getPlaceholder() {
+      return (
+        <View key={key} style={[styles.daySkeleton, {width: containerWidth}]} />
+      );
+    }
+
+    function getNonSchoolingDay() {
+      return (
+        <TouchableOpacity
+          onPress={() => handleScheduleEntryPress()}
+          key={key}
+          style={[
+            styles.daySkeleton,
+            {width: containerWidth},
+            isActive ? styles.dayActive : styles.dayNonSchooling,
+          ]}>
+          <View key={key}>
+            <Text style={styles.dayText}>{`${number}. `}</Text>
+          </View>
+        </TouchableOpacity>
+      );
+    }
+
+    function getDayWithNoWork() {
+      return (
+        <TouchableOpacity
+          onPress={() => handleScheduleEntryPress()}
+          key={key}
+          style={[styles.daySkeleton, {width: containerWidth}, styles.day]}>
+          <View key={key}>
+            <Text style={styles.dayText}>{`${number}. `}</Text>
+          </View>
+        </TouchableOpacity>
+      );
+    }
+
     if (isPlaceholder) {
-      return <View key={key} style={[styles.day, {width: containerWidth}]} />;
+      return getPlaceholder();
     }
+
     if (schoolDay?.nonSchoolingDay) {
-      return (
-        <TouchableOpacity
-          onPress={() => handleScheduleEntryPress()}
-          key={key}
-          style={[styles.day, {width: containerWidth}, styles.dayNonSchooling]}>
-          <View key={key}>
-            <Text style={styles.dayText}>{`${number}. `}</Text>
-          </View>
-        </TouchableOpacity>
-      );
+      return getNonSchoolingDay();
     }
+
     if (!schoolDay || !schoolHoursLength) {
-      return (
-        <TouchableOpacity
-          onPress={() => handleScheduleEntryPress()}
-          key={key}
-          style={[styles.day, {width: containerWidth}, styles.dayActive]}>
-          <View key={key}>
-            <Text style={styles.dayText}>{`${number}. `}</Text>
-          </View>
-        </TouchableOpacity>
-      );
+      return getDayWithNoWork();
     }
-    return (
-      <TouchableOpacity
-        onPress={() => handleScheduleEntryPress()}
-        key={key}
-        style={[styles.day, {width: containerWidth}, styles.dayActive]}>
-        {/* style={styles.item} */}
-        <View key={key}>
-          <Text style={styles.dayText}>
-            {`${number}. `}
-            {/* day text */}
-            {/* some placeholder if there are any entries */}
-          </Text>
-          <Text>{schoolHoursLength}</Text>
-        </View>
-      </TouchableOpacity>
-    );
+
+    return getWorkDay();
   },
 );
 
