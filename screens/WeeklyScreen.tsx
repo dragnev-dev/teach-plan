@@ -7,12 +7,12 @@ import React, {
 } from 'react';
 import {StyleSheet, View} from 'react-native';
 import {NavigationProp} from '@react-navigation/native';
-import MonthlySchoolDay from '../components/MonthlySchoolDay';
 import {useNavigation} from '../store/hooks';
 import {useSelector} from 'react-redux';
 import {RootState} from '../store/store';
 import {getScheduleForWeek} from '../store/reducers/scheduleReducer';
 import {SchoolDay} from '../models/schoolDay';
+import WeeklySchoolDay from '../components/WeeklySchoolDay';
 
 const WeeklyScreen = () => {
   const navigation = useNavigation();
@@ -49,10 +49,7 @@ const WeeklyScreen = () => {
 
   return (
     <View>
-      <View style={styles.container}>
-        {/*<Text>Week {week}</Text>*/}
-        {daysList}
-      </View>
+      <View style={styles.container}>{daysList}</View>
     </View>
   );
 };
@@ -73,7 +70,7 @@ function buildDaysList(
       let schoolDay: SchoolDay = weeklySchedule[count];
       count++;
       return (
-        <MonthlySchoolDay
+        <WeeklySchoolDay
           navigation={navigation}
           isoStringDate={day.string}
           number={day.date}
@@ -94,7 +91,6 @@ function buildDaysList(
 function getDaysOfWeek(
   date: Date,
 ): {date: number; month: number; year: number; string: string}[] {
-  // const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   const result: {date: number; month: number; year: number; string: string}[] =
     [];
 
