@@ -15,6 +15,10 @@ import MonthlySchoolDay from '../components/MonthlySchoolDay';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {getUserLocale} from '../utils/getUserLocale';
 import {SchoolDay} from '../models/schoolDay';
+import {
+  NextChevronButton,
+  PreviousChevronButton,
+} from '../components/NavigationChevron';
 
 interface Props {
   route: RouteProp<{
@@ -24,88 +28,93 @@ interface Props {
 
 const MonthlyScreen: React.FC<Props> = ({route}) => {
   const navigation = useNavigation();
-  const selectedDate: Date = useMemo(() => {
-    return route.params?.dateString
-      ? new Date(route.params.dateString)
-      : new Date();
-  }, [route.params?.dateString]);
+  const [selectedDate, setSelectedDate] = useState(() =>
+    route.params?.dateString ? new Date(route.params.dateString) : new Date(),
+  );
 
-  const {date, month, year} = useMemo(
-    () => ({
-      date: selectedDate.getDate(),
-      month: selectedDate.getMonth(),
-      year: selectedDate.getFullYear(),
-    }),
-    [selectedDate],
-  );
-  const [currentDate, setDate] = useState(useMemo(() => new Date(), []));
-  const {cDate, cMonth, cYear} = useMemo(
-    () => ({
-      cDate: currentDate.getDate(),
-      cMonth: currentDate.getMonth(),
-      cYear: currentDate.getFullYear(),
-    }),
-    [currentDate],
-  );
-  const daysInMonth = useMemo(() => getDaysInMonth(month, year), [month, year]);
+  const [currentDate] = useState(() => new Date());
 
   useEffect(() => {
     // Update header bar title on component mount
     navigation.setOptions({
-      title: `${selectedDate.toLocaleString(getUserLocale(), {
-        month: 'long',
-        year: 'numeric',
-      })}`,
+      title: getFormattedMonthTitle(selectedDate),
+      headerTitleAlign: 'center',
+      headerLeft: () => <PreviousChevronButton onPress={goToPrevMonth} />,
+      headerRight: () => <NextChevronButton onPress={goToNextMonth} />,
     });
   }, [navigation, selectedDate]);
 
-  const daysKey = useRef<number>(1);
-  const monthlySchedule: SchoolDay[] = useSelector((state: RootState) =>
-    getScheduleByMonth(state.schedule, year, month + 1, daysInMonth),
+  const monthlySchedule = useSelector((state: RootState) =>
+    getScheduleByMonth(
+      state.schedule,
+      selectedDate.getFullYear(),
+      selectedDate.getMonth() + 1,
+      getDaysInMonth(selectedDate),
+    ),
   );
-  const daysList = buildDaysList(
-    year,
-    month,
-    daysInMonth,
-    daysKey,
-    monthlySchedule,
-    cDate,
-    cMonth,
-    cYear,
-    navigation,
+
+  function goToPrevMonth() {
+    setSelectedDate(
+      prevDate => new Date(prevDate.getFullYear(), prevDate.getMonth() - 1, 1),
+    );
+  }
+
+  function goToNextMonth() {
+    setSelectedDate(
+      prevDate => new Date(prevDate.getFullYear(), prevDate.getMonth() + 1, 1),
+    );
+  }
+
+  return (
+    <View style={styles.monthContainer}>
+      {useMonthDaysList(selectedDate, currentDate, monthlySchedule, navigation)}
+    </View>
   );
-  return <View style={styles.monthContainer}>{daysList}</View>;
 };
 
-function buildDaysList(
-  year: number,
-  month: number,
-  daysInMonth: number,
-  daysKey: MutableRefObject<number>,
+function getFormattedMonthTitle(date: Date): string {
+  return date.toLocaleString(getUserLocale(), {
+    month: 'long',
+    year: 'numeric',
+  });
+}
+
+function useMonthDaysList(
+  selectedDate: Date,
+  currentDate: Date,
   monthlySchedule: SchoolDay[],
-  currentDate: number,
-  currentMonth: number,
-  currentYear: number,
   navigation: NavigationProp<any>,
 ): ReactElement[] {
+  const key = useRef<number>(1);
+  const year = selectedDate.getFullYear();
+  const month = selectedDate.getMonth();
+  const daysInMonth = getDaysInMonth(selectedDate);
   const startDay = getDayOfFirstDayOfMonth(year, month);
-  const placeholderDays = getPlaceholderDays(startDay, daysKey);
-  const daysList = getMonthDays(
-    navigation,
-    year,
-    month,
-    daysInMonth,
-    monthlySchedule,
-    currentDate,
-    currentMonth,
-    currentYear,
-    daysKey,
+
+  const placeholderDays = useMemo(
+    () => getPlaceholderDays(startDay, key),
+    [startDay],
+  );
+  const daysList = useMemo(
+    () =>
+      getMonthDays(
+        year,
+        month,
+        daysInMonth,
+        monthlySchedule,
+        currentDate,
+        key,
+        navigation,
+      ),
+    [year, month, daysInMonth, monthlySchedule, currentDate, navigation],
   );
 
   return [...placeholderDays, ...daysList];
 }
 
-function getDaysInMonth(month: number, year: number): number {
+function getDaysInMonth(date: Date): number {
+  const year = date.getFullYear();
+  const month = date.getMonth();
   return new Date(year, month + 1, 0).getDate();
 }
 
@@ -129,37 +138,36 @@ function getPlaceholderDays(
 }
 
 function getMonthDays(
-  navigation: NavigationProp<any>,
   year: number,
-  monthI: number,
+  month: number,
   daysInMonth: number,
   monthlySchedule: SchoolDay[],
-  currentDay: number,
-  currentMonth: number,
-  currentYear: number,
+  currentDate: Date,
   key: MutableRefObject<number>,
+  navigation: NavigationProp<any>,
 ): ReactElement[] {
   const days: number[] = Array.from(
     {length: daysInMonth},
     (_, i: number) => i + 1,
   );
-  const daysList: ReactElement[] = days.map((day: number) => {
+  return days.map((day: number) => {
     key.current++;
-    let schoolDay: SchoolDay = monthlySchedule[day - 1];
+    const schoolDay: SchoolDay = monthlySchedule[day - 1];
+    const isActive =
+      day === currentDate.getDate() &&
+      month === currentDate.getMonth() &&
+      year === currentDate.getFullYear();
     return (
       <MonthlySchoolDay
         navigation={navigation}
-        isoStringDate={`${year}-${monthI + 1}-${day}`}
+        isoStringDate={`${year}-${month + 1}-${day}`}
         number={day}
         schoolDay={schoolDay}
         key={key.current}
-        isActive={
-          day === currentDay && monthI === currentMonth && year === currentYear
-        }
+        isActive={isActive}
       />
     );
   });
-  return daysList;
 }
 
 const styles = StyleSheet.create({
