@@ -1,10 +1,12 @@
 import React, {memo, ReactElement, useMemo} from 'react';
 import {
   Dimensions,
+  StyleProp,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
+  ViewStyle,
 } from 'react-native';
 import {NavigationProp} from '@react-navigation/native';
 import {SCREENS} from '../navigation/AppNavigator';
@@ -135,11 +137,19 @@ const MonthlySchoolDay: React.NamedExoticComponent<MonthDayProps> = memo(
     }
 
     function getDayWithNoWork() {
+      let viewStyles: StyleProp<ViewStyle> = [
+        styles.daySkeleton,
+        {width: containerWidth},
+        styles.day,
+      ];
+      if (isActive) {
+        viewStyles.push(styles.dayActive);
+      }
       return (
         <TouchableOpacity
           onPress={() => handleScheduleEntryPress()}
           key={key}
-          style={[styles.daySkeleton, {width: containerWidth}, styles.day]}>
+          style={viewStyles}>
           <View key={key}>
             <Text style={styles.dayText}>{`${number}. `}</Text>
           </View>

@@ -185,7 +185,7 @@ const WeeklySchoolDay: React.NamedExoticComponent<WeeklyDayProps> = memo(
     }
 
     if (!schoolDay || !schoolDay.entries.length) {
-      return getDayWithoutHours(styles.day);
+      return getDayWithoutHours(isActive ? styles.dayActive : styles.day);
     }
 
     return getDayWithHours();
