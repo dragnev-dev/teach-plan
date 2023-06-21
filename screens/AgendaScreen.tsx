@@ -1,5 +1,5 @@
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
-import React, {useMemo} from 'react';
+import React, {useState} from 'react';
 import {RootState} from '../store/store';
 import {useSelector} from 'react-redux';
 import {getScheduleByDate} from '../store/reducers/scheduleReducer';
@@ -8,6 +8,10 @@ import AgendaSchoolHour from '../components/AgendaSchoolHour';
 import {useNavigation} from '../store/hooks';
 import {RouteProp} from '@react-navigation/native';
 import {getUserLocale} from '../utils/getUserLocale';
+import {
+  NextChevronButton,
+  PreviousChevronButton,
+} from '../components/NavigationChevron';
 
 interface AgendaScreenProps {
   route: RouteProp<{
@@ -16,11 +20,9 @@ interface AgendaScreenProps {
 }
 const AgendaScreen: React.FC<AgendaScreenProps> = ({route}) => {
   const navigation = useNavigation();
-  const date: Date = useMemo(() => {
-    return route.params?.dateString
-      ? new Date(route.params.dateString)
-      : new Date();
-  }, [route.params?.dateString]);
+  const [date, setDate] = useState(
+    () => new Date(route.params?.dateString ?? Date.now()),
+  );
 
   React.useEffect(() => {
     // Update header bar title on component mount
@@ -31,7 +33,21 @@ const AgendaScreen: React.FC<AgendaScreenProps> = ({route}) => {
         month: '2-digit',
         year: 'numeric',
       })}`,
+      headerTitleAlign: 'center',
+      headerLeft: () => <PreviousChevronButton onPress={goToPrevWeek} />,
+      headerRight: () => <NextChevronButton onPress={goToNextWeek} />,
     });
+    function goToPrevWeek() {
+      const newDate = new Date(date);
+      newDate.setDate(newDate.getDate() - 1);
+      setDate(newDate);
+    }
+
+    function goToNextWeek() {
+      const newDate = new Date(date);
+      newDate.setDate(newDate.getDate() + 1);
+      setDate(newDate);
+    }
   }, [navigation, date]);
 
   const schoolDay = useSelector((state: RootState) =>

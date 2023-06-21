@@ -1,51 +1,101 @@
-import React, {
-  MutableRefObject,
-  ReactElement,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, {ReactElement, useEffect, useMemo, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {NavigationProp} from '@react-navigation/native';
+import {RouteProp} from '@react-navigation/native';
 import {useNavigation} from '../store/hooks';
 import {useSelector} from 'react-redux';
 import {RootState} from '../store/store';
 import {getScheduleForWeek} from '../store/reducers/scheduleReducer';
-import {SchoolDay} from '../models/schoolDay';
 import WeeklySchoolDay from '../components/WeeklySchoolDay';
+import {
+  NextChevronButton,
+  PreviousChevronButton,
+} from '../components/NavigationChevron';
 
-const WeeklyScreen = () => {
+interface Props {
+  route: RouteProp<{
+    params: {dateString?: string};
+  }>;
+}
+
+const WeeklyScreen: React.FC<Props> = ({route: {params}}) => {
   const navigation = useNavigation();
-  const [d, setDate] = useState(useMemo(() => new Date(), []));
-  const [week, setWeek] = useState(getISOWeekNumber(d));
-  const {cDate, cMonth, cYear} = useMemo(() => {
-    const currentDate = new Date();
-    return {
-      cDate: currentDate.getDate(),
-      cMonth: currentDate.getMonth(),
-      cYear: currentDate.getFullYear(),
-    };
-  }, []);
+  const [selectedDate, setSelectedDate] = useState(
+    () => new Date(params?.dateString ?? Date.now()),
+  );
+  const {
+    date: cDate,
+    month: cMonth,
+    year: cYear,
+  } = useMemo(
+    () => ({
+      date: new Date().getDate(),
+      month: new Date().getMonth(),
+      year: new Date().getFullYear(),
+    }),
+    [],
+  );
 
-  const days = useMemo(() => getDaysOfWeek(d), [d]);
+  useEffect(() => {
+    // Update header bar title on component mount
+    navigation.setOptions({
+      headerTitleAlign: 'center',
+      headerLeft: () => <PreviousChevronButton onPress={goToPrevWeek} />,
+      headerRight: () => <NextChevronButton onPress={goToNextWeek} />,
+    });
+    function goToPrevWeek() {
+      const newDate = new Date(selectedDate);
+      newDate.setDate(newDate.getDate() - 7);
+      setSelectedDate(newDate);
+    }
 
-  const daysKey = useRef<number>(1);
-  const weeklySchedule: SchoolDay[] =
+    function goToNextWeek() {
+      const newDate = new Date(selectedDate);
+      newDate.setDate(newDate.getDate() + 7);
+      setSelectedDate(newDate);
+    }
+  }, [navigation, selectedDate]);
+
+  const days = useMemo(() => getDaysOfWeek(selectedDate), [selectedDate]);
+
+  function buildDaysList(
+    days: {
+      date: number;
+      month: number;
+      year: number;
+      string: string;
+    }[],
+  ): ReactElement[] {
+    function isSameDay(date1: Date, date2: Date): boolean {
+      return date1.getTime() === date2.getTime();
+    }
+
+    return days.map(({date, month, year, string}, index) => {
+      const schoolDay = weeklySchedule[index];
+      return (
+        <WeeklySchoolDay
+          navigation={navigation}
+          isoStringDate={string}
+          number={date}
+          schoolDay={schoolDay}
+          key={index}
+          isActive={isSameDay(
+            new Date(year, month, date),
+            new Date(cYear, cMonth, cDate),
+          )}
+        />
+      );
+    });
+  }
+
+  const weeklySchedule =
     useSelector((state: RootState) =>
       getScheduleForWeek(
         state.schedule,
-        days.map(dm => dm.string),
+        days.map(day => day.string),
       ),
     ) ?? [];
-  const daysList = buildDaysList(
-    days,
-    daysKey,
-    weeklySchedule,
-    cDate,
-    cMonth,
-    cYear,
-    navigation,
-  );
+
+  const daysList = buildDaysList(days);
 
   return (
     <View>
@@ -54,70 +104,22 @@ const WeeklyScreen = () => {
   );
 };
 
-function buildDaysList(
-  days: {date: number; month: number; year: number; string: string}[],
-  key: MutableRefObject<number>,
-  weeklySchedule: SchoolDay[],
-  currentDate: number,
-  currentMonth: number,
-  currentYear: number,
-  navigation: NavigationProp<any>,
-): ReactElement[] {
-  let count = 0;
-  const daysList: ReactElement[] = days.map(
-    (day: {date: number; month: number; year: number; string: string}) => {
-      key.current++;
-      let schoolDay: SchoolDay = weeklySchedule[count];
-      count++;
-      return (
-        <WeeklySchoolDay
-          navigation={navigation}
-          isoStringDate={day.string}
-          number={day.date}
-          schoolDay={schoolDay}
-          key={key.current}
-          isActive={
-            day.date === currentDate &&
-            day.month === currentMonth &&
-            day.year === currentYear
-          }
-        />
-      );
-    },
-  );
-
-  return daysList;
-}
 function getDaysOfWeek(
   date: Date,
 ): {date: number; month: number; year: number; string: string}[] {
-  const result: {date: number; month: number; year: number; string: string}[] =
-    [];
-
-  // Find the date of the Monday in the same week as the input date
   const monday = new Date(date);
   monday.setDate(monday.getDate() - ((monday.getDay() + 6) % 7));
-
-  // Add each day of the week to the result array
-  for (let i = 0; i < 7; i++) {
+  const result = Array.from({length: 7}, (_, i) => {
     const day = new Date(monday);
     day.setDate(day.getDate() + i);
-    result.push({
+    return {
       date: day.getDate(),
       month: day.getMonth(),
       year: day.getFullYear(),
       string: day.toISOString().slice(0, 10),
-    });
-  }
-
+    };
+  });
   return result;
-}
-
-function getISOWeekNumber(date: Date): number {
-  const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
-  const pastDaysOfYear: number =
-    (date.getTime() - firstDayOfYear.getTime()) / 86400000;
-  return Math.ceil((pastDaysOfYear + firstDayOfYear.getUTCDay() + 1) / 7);
 }
 
 const styles = StyleSheet.create({
