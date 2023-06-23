@@ -15,7 +15,10 @@ import {
 
 interface AgendaScreenProps {
   route: RouteProp<{
-    params: {dateString?: string};
+    params: {
+      dateString?: string;
+      detailsScreenName?: string;
+    };
   }>;
 }
 const AgendaScreen: React.FC<AgendaScreenProps> = ({route}) => {
@@ -28,18 +31,31 @@ const AgendaScreen: React.FC<AgendaScreenProps> = ({route}) => {
     }
   }, [route.params?.dateString]);
   React.useEffect(() => {
-    // Update header bar title on component mount
-    navigation.setOptions({
-      title: `${date.toLocaleString(getUserLocale(), {
-        weekday: 'long',
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-      })}`,
-      headerTitleAlign: 'center',
-      headerLeft: () => <PreviousChevronButton onPress={goToPrevWeek} />,
-      headerRight: () => <NextChevronButton onPress={goToNextWeek} />,
-    });
+    // if no detailsScreenName provided show (implicit) back button
+    if (route.params?.detailsScreenName) {
+      navigation.setOptions({
+        title: `${date.toLocaleString(getUserLocale(), {
+          weekday: 'long',
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
+        })}`,
+        headerTitleAlign: 'center',
+      });
+    } else {
+      // else show 1 day back and forth navigation
+      navigation.setOptions({
+        title: `${date.toLocaleString(getUserLocale(), {
+          weekday: 'long',
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
+        })}`,
+        headerTitleAlign: 'center',
+        headerLeft: () => <PreviousChevronButton onPress={goToPrevWeek} />,
+        headerRight: () => <NextChevronButton onPress={goToNextWeek} />,
+      });
+    }
     function goToPrevWeek() {
       const newDate = new Date(date);
       newDate.setDate(newDate.getDate() - 1);
@@ -51,7 +67,7 @@ const AgendaScreen: React.FC<AgendaScreenProps> = ({route}) => {
       newDate.setDate(newDate.getDate() + 1);
       setDate(newDate);
     }
-  }, [navigation, date]);
+  }, [navigation, date, route.params?.detailsScreenName]);
 
   const schoolDay = useSelector((state: RootState) =>
     getScheduleByDate(state.schedule, date.toDateString()),
@@ -70,6 +86,7 @@ const AgendaScreen: React.FC<AgendaScreenProps> = ({route}) => {
           number: i,
           schoolHour: entry,
           key: i,
+          detailsScreenName: route.params?.detailsScreenName,
         }),
       );
     }

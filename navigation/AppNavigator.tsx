@@ -15,7 +15,11 @@ export const SCREENS = {
   AGENDA_SCREEN: 'AgendaScreen',
   DETAILS_SCREEN: 'DetailsScreen',
   WEEKLY_SCREEN: 'WeeklyScreen',
+  WEEKLY_AGENDA_SCREEN: 'WeeklyAgendaScreen',
+  WEEKLY_DETAILS_SCREEN: 'WeeklyDetailsScreen',
   MONTHLY_SCREEN: 'MonthlyScreen',
+  MONTHLY_AGENDA_SCREEN: 'MonthlyAgendaScreen',
+  MONTHLY_DETAILS_SCREEN: 'MonthlyDetailsScreen',
   APP_SETTINGS: 'AppSettings',
   UPLOAD_DATA: 'UploadData',
 };
@@ -36,7 +40,8 @@ const WeeklyStack = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen name={SCREENS.WEEKLY_SCREEN} component={WeeklyScreen} />
-      <Stack.Screen name="WeeklyStackAgenda" component={AgendaStack} />
+      <Stack.Screen name={SCREENS.WEEKLY_AGENDA_SCREEN} component={AgendaScreen} />
+      <Stack.Screen name={SCREENS.WEEKLY_DETAILS_SCREEN} component={DetailsScreen} />
     </Stack.Navigator>
   );
 };
@@ -45,7 +50,8 @@ const MonthlyStack = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen name={SCREENS.MONTHLY_SCREEN} component={MonthlyScreen} />
-      <Stack.Screen name="MonthlyStackWeekly" component={WeeklyStack} />
+      <Stack.Screen name={SCREENS.MONTHLY_AGENDA_SCREEN} component={AgendaScreen} />
+      <Stack.Screen name={SCREENS.MONTHLY_DETAILS_SCREEN} component={DetailsScreen} />
     </Stack.Navigator>
   );
 };

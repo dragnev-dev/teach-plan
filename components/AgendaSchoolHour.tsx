@@ -26,6 +26,7 @@ type AgendaSchoolHourProps = PropsWithChildren<{
   number: number;
   schoolHour: TeacherScheduleEntry | undefined;
   key: number;
+  detailsScreenName?: string;
 }>;
 
 function AgendaSchoolHour({
@@ -34,6 +35,7 @@ function AgendaSchoolHour({
   number,
   schoolHour,
   key,
+  detailsScreenName,
 }: AgendaSchoolHourProps): ReactElement {
   if (!schoolHour) {
     return (
@@ -43,7 +45,7 @@ function AgendaSchoolHour({
     );
   }
   const handleScheduleEntryPress = () => {
-    navigation.navigate(SCREENS.DETAILS_SCREEN, {
+    navigation.navigate(detailsScreenName ?? SCREENS.DETAILS_SCREEN, {
       date: date.toDateString(),
       hour: number,
       key: {date: date.toDateString(), hour: number},

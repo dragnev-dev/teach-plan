@@ -39,8 +39,9 @@ const WeeklySchoolDay: React.NamedExoticComponent<WeeklyDayProps> = memo(
     }, []);
 
     const handleScheduleEntryPress = (): void => {
-      navigation!.navigate(SCREENS.AGENDA_SCREEN, {
+      navigation!.navigate(SCREENS.WEEKLY_AGENDA_SCREEN, {
         dateString: isoStringDate,
+        detailsScreenName: SCREENS.WEEKLY_DETAILS_SCREEN,
       });
     };
 

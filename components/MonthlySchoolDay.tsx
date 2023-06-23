@@ -36,8 +36,9 @@ const MonthlySchoolDay: React.NamedExoticComponent<MonthDayProps> = memo(
       return (Dimensions.get('window').width - 59) / 7;
     }, []);
     const handleScheduleEntryPress = (): void => {
-      navigation!.navigate(SCREENS.AGENDA_SCREEN, {
+      navigation!.navigate(SCREENS.MONTHLY_AGENDA_SCREEN, {
         dateString: isoStringDate,
+        detailsScreenName: SCREENS.MONTHLY_DETAILS_SCREEN,
       });
     };
     const schoolHoursLength = schoolDay?.entries.filter(
