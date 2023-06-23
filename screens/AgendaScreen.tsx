@@ -20,10 +20,13 @@ interface AgendaScreenProps {
 }
 const AgendaScreen: React.FC<AgendaScreenProps> = ({route}) => {
   const navigation = useNavigation();
-  const [date, setDate] = useState(
-    () => new Date(route.params?.dateString ?? Date.now()),
-  );
+  const [date, setDate] = useState(() => new Date());
 
+  React.useEffect(() => {
+    if (route.params?.dateString) {
+      setDate(new Date(route.params.dateString));
+    }
+  }, [route.params?.dateString]);
   React.useEffect(() => {
     // Update header bar title on component mount
     navigation.setOptions({
