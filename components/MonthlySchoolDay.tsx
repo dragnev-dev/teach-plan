@@ -60,6 +60,9 @@ const MonthlySchoolDay: React.NamedExoticComponent<MonthDayProps> = memo(
       day: {
         backgroundColor: 'white',
         borderRadius: 10,
+        borderStyle: 'solid',
+        borderColor: 'gray',
+        borderWidth: 0.25,
       },
       dayText: {
         fontWeight: 'bold',
