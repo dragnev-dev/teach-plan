@@ -3,6 +3,10 @@ import {StyleSheet, View} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
 import {useNavigation} from '../store/hooks';
 import {useSelector} from 'react-redux';
+import {
+  getMaximumSchoolHoursPerDay,
+  getScheduleForWeek,
+} from '../store/reducers/scheduleReducer';
 import {RootState} from '../store/store';
 import DayOfWeek from '../components/DayOfWeek';
 import {
@@ -77,6 +81,7 @@ const WeeklyScreen: React.FC<Props> = ({route: {params}}) => {
           number={date}
           schoolDay={schoolDay}
           key={index}
+          schoolHourAmount={schoolHourAmount}
           isActive={isSameDay(
             new Date(year, month, date),
             new Date(cYear, cMonth, cDate),
@@ -93,6 +98,9 @@ const WeeklyScreen: React.FC<Props> = ({route: {params}}) => {
         days.map(day => day.string),
       ),
     ) ?? [];
+  const schoolHourAmount = useSelector((state: RootState) =>
+    getMaximumSchoolHoursPerDay(state.schedule),
+  );
 
   const daysList = buildDaysList(days);
 

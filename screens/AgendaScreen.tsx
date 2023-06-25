@@ -2,7 +2,10 @@ import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import React, {useState} from 'react';
 import {RootState} from '../store/store';
 import {useSelector} from 'react-redux';
-import {getScheduleByDate} from '../store/reducers/scheduleReducer';
+import {
+  getMaximumSchoolHoursPerDay,
+  getScheduleByDate,
+} from '../store/reducers/scheduleReducer';
 import {TeacherScheduleEntry} from '../models/teacherScheduleEntry';
 import AgendaSchoolHour from '../components/AgendaSchoolHour';
 import {useNavigation} from '../store/hooks';
