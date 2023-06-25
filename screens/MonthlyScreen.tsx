@@ -119,7 +119,9 @@ function getDaysInMonth(date: Date): number {
 }
 
 function getDayOfFirstDayOfMonth(year: number, month: number): number {
-  return new Date(year, month, 1).getDay();
+  let day = new Date(year, month, 1).getDay();
+  // Saturday specific edge case
+  return day > 0 ? day : 7;
 }
 
 function getPlaceholderDays(
