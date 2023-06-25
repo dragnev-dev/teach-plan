@@ -15,3 +15,14 @@ export interface SyllabusEntry {
   number: number;
   week: number;
 }
+
+export function createBlankSyllabusEntry(number: number): SyllabusEntry {
+  return {
+    topicName: '-',
+    lessonUnit: '-',
+    expectedResults: '-',
+    methodsAndWorkForms: '-',
+    number,
+    week: Math.floor(number / 2),
+  };
+}

@@ -6,7 +6,7 @@ import {
 } from '../../models/schedule';
 import {ActionTypes} from '../actions/actionTypes';
 import {AddScheduleAction} from '../actions/actionCreators';
-import {Syllabus} from '../../models/syllabus';
+import {createBlankSyllabusEntry, Syllabus} from '../../models/syllabus';
 import {TeacherScheduleEntry} from '../../models/teacherScheduleEntry';
 import {SchoolDay} from '../../models/schoolDay';
 
@@ -223,13 +223,14 @@ function getWeeklySchedule(
                 }
               }
               const syllabusEntries = syllabusesMap.get(classNumber) ?? [];
-              const syllabusEntry = syllabusEntries.find(
-                entry =>
-                  entry.number ===
-                  (syllabusEntries.length === 0
-                    ? 0
-                    : counters[classNumber][subclass!]),
-              );
+              const syllabusEntry =
+                syllabusEntries.find(
+                  entry =>
+                    entry.number ===
+                    (syllabusEntries.length === 0
+                      ? 0
+                      : counters[classNumber][subclass!]),
+                ) ?? createBlankSyllabusEntry(classNumber);
 
               dailyScheduleEntry.push({
                 class: classNumber,
