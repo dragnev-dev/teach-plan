@@ -49,10 +49,3 @@ export const getSyllabusEntries = (
   );
   return syllabus ? syllabus.syllabusEntries : [];
 };
-
-export const selectSyllabusById = (
-  state: SyllabusState,
-  syllabusId: number,
-) => {
-  return state.syllabuses.find(s => s.id === syllabusId);
-};

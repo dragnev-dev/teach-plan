@@ -1,17 +1,22 @@
 // Represents the serialized entity for the whole schedule.
+
+export interface Schedule {
+  terms: Term[];
+  year: number;
+  version: number;
+  nonSchoolDays: {[key: string]: string};
+}
+
 // classes: StudentClassSchedule[] the classes in the school (1a, 1b... 12z)
 // year
 // term
 
-export interface Schedule {
-  id: number;
-  classes: StudentClassSchedule[];
-  year: number;
-  term: number;
+export interface Term {
+  number: number;
   termBegin: string;
   termEnd: string;
   version: number;
-  nonSchoolDays: {[key: string]: string};
+  classes: StudentClassSchedule[];
 }
 
 // Represents the schedule of one class
