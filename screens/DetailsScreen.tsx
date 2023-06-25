@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {ScrollView, StyleSheet} from 'react-native';
 import {useSelector} from 'react-redux';
 import {RootState} from '../store/store';
 import {getSchoolHourForDate} from '../store/reducers/scheduleReducer';
@@ -30,17 +30,13 @@ export const DetailsScreen: React.FC<DetailsScreenProps> = ({route}) => {
       })}`,
     });
   }, [navigation, route.params.date, syllabusEntry]);
-  if (!syllabusEntry) {
-    // TODO: worth the edge case?
-    return <View />;
-  }
 
   return (
-    <View
+    <ScrollView
       style={styles.container}
       key={`${route.params.key.date}-${route.params.key.hour}`}>
       <AgendaSyllabusDetails scheduleEntry={syllabusEntry!} />
-    </View>
+    </ScrollView>
   );
 };
 
