@@ -11,7 +11,7 @@ import {useSelector} from 'react-redux';
 import {RootState} from '../store/store';
 import {getScheduleByMonth} from '../store/reducers/scheduleReducer';
 import {useNavigation} from '../store/hooks';
-import MonthlySchoolDay from '../components/MonthlySchoolDay';
+import DayOfMonth from '../components/DayOfMonth';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {getUserLocale} from '../utils/getUserLocale';
 import {SchoolDay} from '../models/schoolDay';
@@ -133,7 +133,7 @@ function getPlaceholderDays(
 
   return days.map(() => {
     key.current++;
-    return <MonthlySchoolDay key={key.current} isPlaceholder={true} />;
+    return <DayOfMonth key={key.current} isPlaceholder={true} />;
   });
 }
 
@@ -158,7 +158,7 @@ function getMonthDays(
       month === currentDate.getMonth() &&
       year === currentDate.getFullYear();
     return (
-      <MonthlySchoolDay
+      <DayOfMonth
         navigation={navigation}
         isoStringDate={`${year}-${month + 1}-${day}`}
         number={day}

@@ -72,12 +72,14 @@ const AgendaScreen: React.FC<AgendaScreenProps> = ({route}) => {
   const schoolDay = useSelector((state: RootState) =>
     getScheduleByDate(state.schedule, date.toDateString()),
   );
+  const schoolHourAmount = useSelector((state: RootState) =>
+    getMaximumSchoolHoursPerDay(state.schedule),
+  );
 
   const renderAgendaEntries = (entries: TeacherScheduleEntry[]) => {
     entries.sort((a, b) => a.schoolHour - b.schoolHour);
     const entriesElements = [];
-    // TODO: magic numbers. Max number of hours into the state upon schedule import
-    for (let i = 1; i <= 7; i++) {
+    for (let i = 1; i <= schoolHourAmount; i++) {
       let entry = entries.find(e => e.schoolHour === i);
       entriesElements.push(
         AgendaSchoolHour({

@@ -4,8 +4,7 @@ import {RouteProp} from '@react-navigation/native';
 import {useNavigation} from '../store/hooks';
 import {useSelector} from 'react-redux';
 import {RootState} from '../store/store';
-import {getScheduleForWeek} from '../store/reducers/scheduleReducer';
-import WeeklySchoolDay from '../components/WeeklySchoolDay';
+import DayOfWeek from '../components/DayOfWeek';
 import {
   NextChevronButton,
   PreviousChevronButton,
@@ -58,7 +57,7 @@ const WeeklyScreen: React.FC<Props> = ({route: {params}}) => {
   const days = useMemo(() => getDaysOfWeek(selectedDate), [selectedDate]);
 
   function buildDaysList(
-    days: {
+    daysToBuild: {
       date: number;
       month: number;
       year: number;
@@ -69,10 +68,10 @@ const WeeklyScreen: React.FC<Props> = ({route: {params}}) => {
       return date1.getTime() === date2.getTime();
     }
 
-    return days.map(({date, month, year, string}, index) => {
+    return daysToBuild.map(({date, month, year, string}, index) => {
       const schoolDay = weeklySchedule[index];
       return (
-        <WeeklySchoolDay
+        <DayOfWeek
           navigation={navigation}
           isoStringDate={string}
           number={date}

@@ -7,7 +7,7 @@ interface SchoolHourSyllabusDetailsProps {
   scheduleEntry: TeacherScheduleEntry;
 }
 
-export function SchoolHourSyllabusDetails(props: SchoolHourSyllabusDetailsProps) {
+export function AgendaSyllabusDetails(props: SchoolHourSyllabusDetailsProps) {
   const {
     class: classNumber,
     subclass,

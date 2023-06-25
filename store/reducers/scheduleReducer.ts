@@ -2,6 +2,7 @@ import {
   Schedule,
   SchoolHour,
   StudentClassSchedule,
+  Term,
 } from '../../models/schedule';
 import {ActionTypes} from '../actions/actionTypes';
 import {AddScheduleAction} from '../actions/actionCreators';
@@ -15,21 +16,19 @@ interface ScheduleState {
   // to keep things serializable
   // an index signature to define the shape of the map and string to store date
   teacherSchedule: {[key: string]: SchoolDay};
+  maximumSchoolHoursPerDay: number;
 }
 
 const initialState: ScheduleState = {
   schoolSchedule: {
-    id: 0,
-    classes: [],
-    term: 0,
-    termBegin: '01.01.1970',
-    termEnd: '01.01.1970',
+    terms: [],
     version: 0,
     year: 1970,
     nonSchoolDays: {},
   },
   teacherName: '',
   teacherSchedule: {},
+  maximumSchoolHoursPerDay: 7,
 };
 
 // Reducer
@@ -39,7 +38,7 @@ const scheduleReducer = (
 ): ScheduleState => {
   switch (action.type) {
     case ActionTypes.ADD_SCHEDULE:
-      let newTeacherSchedule = getWeeklySchedule(
+      const [newTeacherSchedule, maximumSchoolHoursPerDay] = getWeeklySchedule(
         action.payload.teacherName,
         action.payload.schedule,
         action.payload.syllabuses,
@@ -54,6 +53,7 @@ const scheduleReducer = (
         schoolSchedule: action.payload.schedule,
         teacherName: action.payload.teacherName,
         teacherSchedule: tScheduleAsObj,
+        maximumSchoolHoursPerDay,
       };
     default:
       return state;
@@ -67,6 +67,10 @@ export function getScheduleByDate(
   date: string,
 ): SchoolDay | undefined {
   return state.teacherSchedule[date];
+}
+
+export function getMaximumSchoolHoursPerDay(state: ScheduleState): number {
+  return state.maximumSchoolHoursPerDay;
 }
 
 export function getScheduleForWeek(
@@ -157,103 +161,113 @@ function getWeeklySchedule(
   teacher: string,
   schedule: Schedule,
   syllabuses: Syllabus[],
-): Map<string, SchoolDay> {
-  const startDate: Date = new Date(schedule.termBegin);
-  let endDate: Date = new Date(schedule.termEnd);
-
-  const classSpecificNonSchoolDays: {[key: string]: {[key: string]: string}} =
-    getClassSpecificNonSchoolDays(schedule.classes);
+): [Map<string, SchoolDay>, number] {
   const syllabusesMap = new Map(
     syllabuses.map(syllabus => [syllabus.class, syllabus.syllabusEntries]),
   );
+  let maximumSchoolHoursPerDay = 0;
   const dailySchedule: Map<string, SchoolDay> = new Map<string, SchoolDay>();
 
-  let counters = getCounters(schedule.classes);
+  let counters = getCounters(schedule.terms[0].classes);
+  for (const term of schedule.terms) {
+    const startDate: Date = new Date(term.termBegin);
+    let endDate: Date = new Date(term.termEnd);
+    const classSpecificNonSchoolDays: {[key: string]: {[key: string]: string}} =
+      getClassSpecificNonSchoolDays(term.classes);
 
-  for (
-    let date = startDate;
-    date <= endDate;
-    date.setDate(date.getDate() + 1)
-  ) {
-    let schoolDay: SchoolDay = {entries: []};
-    let nonSchooledReason: string | undefined =
-      schedule.nonSchoolDays[getDateString(date)]; //
-    if (nonSchooledReason) {
-      schoolDay.nonSchoolingDay = {
-        isNonSchooling: true,
-        reason: nonSchooledReason,
-      };
-      dailySchedule.set(date.toDateString(), schoolDay);
-      continue;
-    }
-    const classesForTheDate = findSchoolDay(schedule, date);
-    const dailyScheduleEntry: TeacherScheduleEntry[] = [];
-    classesForTheDate.forEach(({class: classNumber, subclass, schoolHours}) => {
-      for (
-        let schoolHourIndex = 0;
-        schoolHourIndex < schoolHours.length;
-        schoolHourIndex++
-      ) {
-        const schoolHour = schoolHours[schoolHourIndex];
-        if (schoolHour.teachers.includes(teacher)) {
-          let classSpecificNonSchoolDs =
-            classSpecificNonSchoolDays[classNumber];
-          if (classSpecificNonSchoolDs) {
-            let nonSchoolingDay = classSpecificNonSchoolDs[getDateString(date)];
+    for (
+      let date = startDate;
+      date <= endDate;
+      date.setDate(date.getDate() + 1)
+    ) {
+      let schoolDay: SchoolDay = {entries: []};
+      let nonSchooledReason: string | undefined =
+        schedule.nonSchoolDays[getDateString(date)];
+      if (nonSchooledReason) {
+        schoolDay.nonSchoolingDay = {
+          isNonSchooling: true,
+          reason: nonSchooledReason,
+        };
+        dailySchedule.set(date.toDateString(), schoolDay);
+        continue;
+      }
+      const classesForTheDate = findSchoolDay(term, date);
+      const dailyScheduleEntry: TeacherScheduleEntry[] = [];
+      classesForTheDate.forEach(
+        ({class: classNumber, subclass, schoolHours}) => {
+          for (
+            let schoolHourIndex = 0;
+            schoolHourIndex < schoolHours.length;
+            schoolHourIndex++
+          ) {
+            const schoolHour = schoolHours[schoolHourIndex];
+            if (schoolHour.teachers.includes(teacher)) {
+              let classSpecificNonSchoolDs =
+                classSpecificNonSchoolDays[classNumber];
+              if (classSpecificNonSchoolDs) {
+                let nonSchoolingDay =
+                  classSpecificNonSchoolDs[getDateString(date)];
 
-            if (nonSchoolingDay) {
+                if (nonSchoolingDay) {
+                  dailyScheduleEntry.push({
+                    class: classNumber,
+                    subclass: subclass!,
+                    subject: schoolHour.subject,
+                    schoolHour: schoolHourIndex + 1,
+                    isNonSchoolHour: {
+                      isNonSchooling: true,
+                      reason: nonSchoolingDay,
+                    },
+                  });
+                  continue;
+                }
+              }
+              const syllabusEntries = syllabusesMap.get(classNumber) ?? [];
+              const syllabusEntry = syllabusEntries.find(
+                entry =>
+                  entry.number ===
+                  (syllabusEntries.length === 0
+                    ? 0
+                    : counters[classNumber][subclass!]),
+              );
+
               dailyScheduleEntry.push({
                 class: classNumber,
                 subclass: subclass!,
                 subject: schoolHour.subject,
                 schoolHour: schoolHourIndex + 1,
-                isNonSchoolHour: {
-                  isNonSchooling: true,
-                  reason: nonSchoolingDay,
-                },
+                syllabusEntry: syllabusEntry,
               });
-              continue;
+
+              if (schoolHourIndex + 1 > maximumSchoolHoursPerDay) {
+                maximumSchoolHoursPerDay = schoolHourIndex + 1;
+              }
+
+              counters[classNumber][subclass!]++;
             }
           }
-          const syllabusEntries = syllabusesMap.get(classNumber) ?? [];
-          const syllabusEntry = syllabusEntries.find(
-            entry =>
-              entry.number ===
-              (syllabusEntries.length === 0
-                ? 0
-                : counters[classNumber][subclass!]),
-          );
+        },
+      );
 
-          dailyScheduleEntry.push({
-            class: classNumber,
-            subclass: subclass!,
-            subject: schoolHour.subject,
-            schoolHour: schoolHourIndex + 1,
-            syllabusEntry: syllabusEntry!,
-          });
-          counters[classNumber][subclass!]++;
-        }
+      if (dailyScheduleEntry.length > 0) {
+        schoolDay.entries = dailyScheduleEntry;
+        dailySchedule.set(date.toDateString(), schoolDay);
       }
-    });
-
-    if (dailyScheduleEntry.length > 0) {
-      schoolDay.entries = dailyScheduleEntry;
-      dailySchedule.set(date.toDateString(), schoolDay);
     }
   }
 
-  return dailySchedule;
+  return [dailySchedule, maximumSchoolHoursPerDay];
 }
 
 function findSchoolDay(
-  schedule: Schedule,
+  term: Term,
   date: Date,
 ): {class: number; subclass: string | undefined; schoolHours: SchoolHour[]}[] {
   const schoolDay: {
     schoolHours: any;
     subclass: string | undefined;
     class: number;
-  }[] = schedule.classes.flatMap(function (classSchedule) {
+  }[] = term.classes.flatMap(function (classSchedule) {
     let _a, _b;
     const classNumber = classSchedule.class,
       subclass = classSchedule.subclass,
@@ -262,7 +276,7 @@ function findSchoolDay(
     // Calculate the end date for the class
     let endDate: Date;
     if (termEndDate) {
-      // TODO: don't parse termEndDate n times, parse it in advance, parse it only once
+      // TODO: don't parse termEndDate to Date n times, parse it in advance and parse it only once
       endDate = new Date(termEndDate);
       // If the given date is after the end date of the class, return an empty array
       if (date > endDate) {

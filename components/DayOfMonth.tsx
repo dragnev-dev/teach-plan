@@ -22,7 +22,7 @@ interface MonthDayProps {
   isActive?: boolean;
 }
 
-const MonthlySchoolDay: React.NamedExoticComponent<MonthDayProps> = memo(
+const DayOfMonth: React.NamedExoticComponent<MonthDayProps> = memo(
   ({
     navigation,
     isoStringDate,
@@ -177,4 +177,4 @@ const MonthlySchoolDay: React.NamedExoticComponent<MonthDayProps> = memo(
   },
 );
 
-export default MonthlySchoolDay;
+export default DayOfMonth;

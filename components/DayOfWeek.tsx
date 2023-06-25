@@ -19,16 +19,18 @@ interface WeeklyDayProps {
   number: number;
   schoolDay: SchoolDay;
   key: number;
+  schoolHourAmount: number;
   isActive?: boolean;
 }
 
-const WeeklySchoolDay: React.NamedExoticComponent<WeeklyDayProps> = memo(
+const DayOfWeek: React.NamedExoticComponent<WeeklyDayProps> = memo(
   ({
     navigation,
     isoStringDate,
     number,
     schoolDay,
     key,
+    schoolHourAmount,
     isActive = false,
   }: WeeklyDayProps): ReactElement => {
     const containerWidth: number = useMemo(() => {
@@ -143,8 +145,7 @@ const WeeklySchoolDay: React.NamedExoticComponent<WeeklyDayProps> = memo(
           );
         }
 
-        // TODO: magic numbers, take care
-        for (let i = 1; i <= 7; i++) {
+        for (let i = 1; i <= schoolHourAmount; i++) {
           let entry = entries.find(e => e.schoolHour === i);
           if (entry) {
             if (!entry.isNonSchoolHour) {
@@ -193,4 +194,4 @@ const WeeklySchoolDay: React.NamedExoticComponent<WeeklyDayProps> = memo(
   },
 );
 
-export default WeeklySchoolDay;
+export default DayOfWeek;
