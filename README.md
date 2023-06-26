@@ -43,11 +43,31 @@ The app allows teachers to track the progress of their syllabus throughout the s
 
 ## Screenshots
 
-TODO
+<img src="documentation/screenshots/app-screenshot-01.png" alt="App screenshot 1" style="max-width:500px;max-height:500px;">
 
-## How to use and sample data for the app
+---
 
-After installing the app, go to settings -> import data. You can use the link of [this sample data endpoint](https://raw.githubusercontent.com/kaisievagradina/teach-plan/data/app-data.json). 
+<img src="documentation/screenshots/app-screenshot-02.png" alt="App screenshot 2" style="max-width:500px;max-height:500px;">
+
+---
+
+<img src="documentation/screenshots/app-screenshot-03.png" alt="App screenshot 3" style="max-width:500px;max-height:500px;">
+
+---
+
+<img src="documentation/screenshots/app-screenshot-04.png" alt="App screenshot 4" style="max-width:500px;max-height:500px;">
+
+---
+
+<img src="documentation/screenshots/app-screenshot-05.png" alt="App screenshot 5" style="max-width:500px;max-height:500px;">
+
+---
+
+<img src="documentation/screenshots/app-screenshot-06.png" alt="App screenshot 6" style="max-width:500px;max-height:500px;">
+
+## How to use: sample data for the app
+
+After installing the app, go to settings -> import data. You can use the link of [this sample data resource](https://raw.githubusercontent.com/kaisievagradina/teach-plan/data/app-data.json). 
 
 ## Building
 
