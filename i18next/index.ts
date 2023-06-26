@@ -2,6 +2,7 @@ import i18n, {ModuleType} from 'i18next';
 import {initReactI18next} from 'react-i18next';
 import * as RNLocalize from 'react-native-localize';
 import english from './locales/en.json';
+import german from './locales/de.json';
 import bulgarian from './locales/bg.json';
 
 export const USER_PREFERRED_LANGUAGE = RNLocalize.getLocales()[0].languageCode;
@@ -20,6 +21,7 @@ const LANGUAGE_DETECTOR = {
 
 const RESOURCES = {
   en: english,
+  de: german,
   bg: bulgarian,
 };
 

@@ -1,0 +1,26 @@
+{
+  "app-navigator": {
+    "agenda": "Agenda",
+    "weekly": "Wöchentlich",
+    "weekly-title": "Wochenansicht",
+    "monthly": "Monatlich",
+    "monthly-title": "Monatsansicht",
+    "settings": "Einstellungen"
+  },
+  "details": {
+    "lesson-unit": "Lerneinheit",
+    "expected-results": "Erwartete Ergebnisse",
+    "methods-and-work-forms": "Methoden und Arbeitsformen"
+  },
+  "settings": {
+    "settings-title": "App-Einstellungen",
+    "import-data": "Daten importieren",
+    "upload-data-title": "Daten hochladen",
+    "enter-url": "URL eingeben",
+    "enter-url-prompt": "Bitte geben Sie eine URL ein",
+    "import-successful": "Import erfolgreich",
+    "error-fetching-file": "Fehler beim Abrufen der Datei",
+    "error-invalid-json": "Ungültiges JSON",
+    "error-importing-data": "Fehler beim Importieren von Daten"
+  }
+}
