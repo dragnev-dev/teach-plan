@@ -46,15 +46,15 @@ const WeeklyScreen: React.FC<Props> = ({route: {params}}) => {
       headerRight: () => <NextChevronButton onPress={goToNextWeek} />,
     });
     function goToPrevWeek() {
-      const newDate = new Date(selectedDate);
-      newDate.setDate(newDate.getDate() - 7);
-      setSelectedDate(newDate);
+      const oneWeekInMs = 7 * 24 * 60 * 60 * 1000; // milliseconds in a week
+      const newDateMs = selectedDate.getTime() - oneWeekInMs;
+      setSelectedDate(new Date(newDateMs));
     }
 
     function goToNextWeek() {
-      const newDate = new Date(selectedDate);
-      newDate.setDate(newDate.getDate() + 7);
-      setSelectedDate(newDate);
+      const oneWeekInMs = 7 * 24 * 60 * 60 * 1000; // milliseconds in a week
+      const newDateMs = selectedDate.getTime() + oneWeekInMs;
+      setSelectedDate(new Date(newDateMs));
     }
   }, [navigation, selectedDate]);
 
