@@ -13,6 +13,7 @@ import {
   NextChevronButton,
   PreviousChevronButton,
 } from '../components/NavigationChevron';
+import {getUserLocale} from '../utils/getUserLocale';
 
 interface Props {
   route: RouteProp<{
@@ -39,8 +40,10 @@ const WeeklyScreen: React.FC<Props> = ({route: {params}}) => {
   );
 
   useEffect(() => {
+    const weekInterval = getStartAndEndOfWeek(selectedDate);
     // Update header bar title on component mount
     navigation.setOptions({
+      title: `${weekInterval.startOfWeek} - ${weekInterval.endOfWeek}`,
       headerTitleAlign: 'center',
       headerLeft: () => <PreviousChevronButton onPress={goToPrevWeek} />,
       headerRight: () => <NextChevronButton onPress={goToNextWeek} />,
@@ -128,6 +131,27 @@ function getDaysOfWeek(
   });
   return result;
 }
+
+const getStartAndEndOfWeek: (date: Date) => {
+  startOfWeek: string;
+  endOfWeek: string;
+} = (date: Date) => {
+  const dayOfWeek = date.getDay();
+  const diff = date.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
+  const startOfWeek = new Date(date.setDate(diff));
+  const endOfWeek = new Date(date.setDate(diff + 6));
+
+  return {
+    startOfWeek: startOfWeek.toLocaleString(getUserLocale(), {
+      month: '2-digit',
+      day: '2-digit',
+    }),
+    endOfWeek: endOfWeek.toLocaleString(getUserLocale(), {
+      month: '2-digit',
+      day: '2-digit',
+    }),
+  };
+};
 
 const styles = StyleSheet.create({
   container: {
