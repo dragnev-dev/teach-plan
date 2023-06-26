@@ -6,6 +6,7 @@ import {getSchoolHourForDate} from '../store/reducers/scheduleReducer';
 import {RouteProp} from '@react-navigation/native';
 import {useNavigation} from '../store/hooks';
 import {AgendaSyllabusDetails} from '../components/AgendaSyllabusDetails';
+import {getUserLocale} from '../utils/getUserLocale';
 
 interface DetailsScreenProps {
   route: RouteProp<{
@@ -24,7 +25,7 @@ export const DetailsScreen: React.FC<DetailsScreenProps> = ({route}) => {
     navigation.setOptions({
       title: `${syllabusEntry?.class}${
         syllabusEntry?.subclass
-      } ${date.toLocaleString('bg-BG', {
+      } ${date.toLocaleString(getUserLocale(), {
         month: '2-digit',
         day: '2-digit',
       })}`,
