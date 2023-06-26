@@ -1,12 +1,12 @@
 # TeachPlan
 
-![App logo](app-logo.jpg "App logo")
+![App logo](documentation/app-logo.jpg "App logo")
 
 This is a Mobile Programming coursework developed with React Native.
 
 # For source code explanations
 
-please refer to [SOURCE_CODE_DETAILS.md](SOURCE_CODE_DETAILS.md).
+please refer to [SOURCE_CODE_DETAILS.md](documentation/SOURCE_CODE_DETAILS.md).
 
 ## Technical overview
 
