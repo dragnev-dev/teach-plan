@@ -2,7 +2,7 @@
 
 ![App logo](app-logo.jpg "App logo")
 
-This is a Mobile Programming coursework written in React Native.
+This is a Mobile Programming coursework developed with React Native.
 
 # For source code explanations
 

@@ -1,6 +1,6 @@
 # Source code details
 
-The code organisation goes as following
+The code organisation goes as following:
 
 ```
 ├── components/
