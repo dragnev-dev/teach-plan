@@ -10,6 +10,7 @@ import MonthlyScreen from '../screens/MonthlyScreen';
 import WeeklyScreen from '../screens/WeeklyScreen';
 import UploadDataScreen from '../screens/UploadDataScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {useTranslation} from 'react-i18next';
 
 export const SCREENS = {
   AGENDA_SCREEN: 'AgendaScreen',
@@ -40,8 +41,14 @@ const WeeklyStack = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen name={SCREENS.WEEKLY_SCREEN} component={WeeklyScreen} />
-      <Stack.Screen name={SCREENS.WEEKLY_AGENDA_SCREEN} component={AgendaScreen} />
-      <Stack.Screen name={SCREENS.WEEKLY_DETAILS_SCREEN} component={DetailsScreen} />
+      <Stack.Screen
+        name={SCREENS.WEEKLY_AGENDA_SCREEN}
+        component={AgendaScreen}
+      />
+      <Stack.Screen
+        name={SCREENS.WEEKLY_DETAILS_SCREEN}
+        component={DetailsScreen}
+      />
     </Stack.Navigator>
   );
 };
@@ -50,8 +57,14 @@ const MonthlyStack = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen name={SCREENS.MONTHLY_SCREEN} component={MonthlyScreen} />
-      <Stack.Screen name={SCREENS.MONTHLY_AGENDA_SCREEN} component={AgendaScreen} />
-      <Stack.Screen name={SCREENS.MONTHLY_DETAILS_SCREEN} component={DetailsScreen} />
+      <Stack.Screen
+        name={SCREENS.MONTHLY_AGENDA_SCREEN}
+        component={AgendaScreen}
+      />
+      <Stack.Screen
+        name={SCREENS.MONTHLY_DETAILS_SCREEN}
+        component={DetailsScreen}
+      />
     </Stack.Navigator>
   );
 };
@@ -66,6 +79,7 @@ const SettingsStack = () => {
 };
 
 const AppNavigator = () => {
+  const {t} = useTranslation('app-navigator');
   const getTabBarIcon = (route: any) => ({
     tabBarIcon: ({
       focused,
@@ -106,14 +120,29 @@ const AppNavigator = () => {
   return (
     <NavigationContainer>
       <Tab.Navigator screenOptions={({route}) => getTabBarIcon(route)}>
-        <Tab.Screen name="Agenda" component={AgendaStack} />
+        <Tab.Screen
+          name="Agenda"
+          options={{headerTitle: t('agenda'), tabBarLabel: t('agenda')}}
+          component={AgendaStack}
+        />
         <Tab.Screen
           name="Weekly View"
-          options={{tabBarLabel: 'Weekly'}}
+          options={{headerTitle: t('weekly-title'), tabBarLabel: t('weekly')}}
           component={WeeklyStack}
         />
-        <Tab.Screen name="Monthly" component={MonthlyStack} />
-        <Tab.Screen name="Settings" component={SettingsStack} />
+        <Tab.Screen
+          name="Monthly"
+          options={{headerTitle: t('monthly-title'), tabBarLabel: t('monthly')}}
+          component={MonthlyStack}
+        />
+        <Tab.Screen
+          name="Settings"
+          options={{
+            headerTitle: t('settings'),
+            tabBarLabel: t('settings'),
+          }}
+          component={SettingsStack}
+        />
       </Tab.Navigator>
     </NavigationContainer>
   );

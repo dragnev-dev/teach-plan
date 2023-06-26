@@ -1,0 +1,26 @@
+{
+  "app-navigator": {
+    "agenda": "Дневен ред",
+    "weekly": "Седмица",
+    "weekly-title": "Седмичен изглед",
+    "monthly": "Месец",
+    "monthly-title": "Месечен изглед",
+    "settings": "Настройки"
+  },
+  "details": {
+    "lesson-unit": "Тип на урока",
+    "expected-results": "Очаквани резултати",
+    "methods-and-work-forms": "Методи на работа и форми"
+  },
+  "settings": {
+    "settings-title": "Настройки на приложението",
+    "import-data": "Внасяне на данни",
+    "upload-data-title": "Качване на данни",
+    "enter-url": "Поставете линк",
+    "enter-url-prompt": "Моля въведете линк",
+    "error-fetching-file": "Грешка при достъпване на файла",
+    "import-successful": "Успешно зареждане на данните",
+    "error-invalid-json": "Невалиден JSON формат",
+    "error-importing-data": "Грешка при внасяне на данните"
+  }
+}

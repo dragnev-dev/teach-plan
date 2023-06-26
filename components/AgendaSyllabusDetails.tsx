@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {TeacherScheduleEntry} from '../models/teacherScheduleEntry';
 import HTMLView from 'react-native-htmlview';
+import {useTranslation} from 'react-i18next';
 
 interface SchoolHourSyllabusDetailsProps {
   scheduleEntry: TeacherScheduleEntry;
@@ -22,15 +23,16 @@ export function AgendaSyllabusDetails(props: SchoolHourSyllabusDetailsProps) {
     number,
     week,
   } = syllabusEntry;
+  const {t} = useTranslation('details');
 
   return (
     <View>
       <HTMLView value={`<h1>${topicName}</h1>`} stylesheet={htmlStyles} />
-      <Text style={styles.title}>Тип на урока</Text>
+      <Text style={styles.title}>{t('lesson-unit')}</Text>
       <HTMLView value={`<p>${lessonUnit}</p>`} stylesheet={htmlStyles} />
-      <Text style={styles.title}>Очаквани резултати</Text>
+      <Text style={styles.title}>{t('expected-results')}</Text>
       <HTMLView value={`<p>${expectedResults}</p>`} stylesheet={htmlStyles} />
-      <Text style={styles.title}>Методи на работа и форми</Text>
+      <Text style={styles.title}>{t('methods-and-work-forms')}</Text>
       <HTMLView value={`<p>${methodsAndWorkForms}</p>`} stylesheet={htmlStyles} />
     </View>
   );

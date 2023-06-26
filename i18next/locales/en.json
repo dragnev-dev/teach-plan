@@ -1,0 +1,26 @@
+{
+  "app-navigator": {
+    "agenda": "Agenda",
+    "weekly": "Weekly",
+    "weekly-title": "Weekly View",
+    "monthly": "Monthly",
+    "monthly-title": "Monthly View",
+    "settings": "Settings"
+  },
+  "details": {
+    "lesson-unit": "Lesson Unit",
+    "expected-results": "Expected Results",
+    "methods-and-work-forms": "Methods And Work Forms"
+  },
+  "settings": {
+    "settings-title": "App Settings",
+    "import-data": "Import data",
+    "upload-data-title": "Upload Data",
+    "enter-url": "Enter URL",
+    "enter-url-prompt": "Please enter a URL",
+    "import-successful": "Import successful",
+    "error-fetching-file": "Error fetching file",
+    "error-invalid-json": "Invalid JSON",
+    "error-importing-data": "Error importing data"
+  }
+}

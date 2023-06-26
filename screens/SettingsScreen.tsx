@@ -4,6 +4,7 @@ import {useNavigation} from '@react-navigation/native';
 import {Syllabus} from '../models/syllabus';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {SCREENS} from '../navigation/AppNavigator';
+import {useTranslation} from 'react-i18next';
 
 type StackParamList = {
   Settings: undefined;
@@ -13,7 +14,13 @@ type StackParamList = {
 
 const SettingsScreen = () => {
   const [darkModeEnabled, setDarkModeEnabled] = useState(false);
+  const {t} = useTranslation('settings');
 
+  React.useEffect(() => {
+    navigation.setOptions({
+      title: t('settings-title'),
+    });
+  });
   type SettingsScreenNavigationProp = StackNavigationProp<
     StackParamList,
     SCREENS.APP_SETTINGS
@@ -46,11 +53,11 @@ const SettingsScreen = () => {
         </View>
       </View>
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Import data</Text>
+        <Text style={styles.sectionTitle}>{t('import-data')}</Text>
         <Button
-          title={'Import data'}
+          title={t('import-data')}
           onPress={handleImportData}
-          accessibilityLabel="Import syllabus data"
+          accessibilityLabel={t('import-data')}
         />
       </View>
     </View>

@@ -5,6 +5,7 @@ import {Syllabus} from '../models/syllabus';
 import {useAppDispatch, useNavigation} from '../store/hooks';
 import {addSchedule} from '../store/actions/scheduleActions';
 import {addSyllabuses} from '../store/actions/syllabusActions';
+import {useTranslation} from 'react-i18next';
 
 interface ImportDataModel {
   schedule: Schedule;
@@ -17,10 +18,17 @@ const UploadDataScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
+  const {t} = useTranslation('settings');
+
+  React.useEffect(() => {
+    navigation.setOptions({
+      title: t('upload-data-title'),
+    });
+  });
 
   const handleDataImport = async () => {
     if (!url) {
-      Alert.alert('Please enter a URL');
+      Alert.alert(t('enter-url-prompt'));
       return;
     }
     setIsLoading(true); // disable button and show activity indicator
@@ -33,7 +41,7 @@ const UploadDataScreen = () => {
       await handleImport(text);
     } catch (error) {
       console.error(error);
-      Alert.alert('Error fetching file');
+      Alert.alert(t('error-fetching-file'));
     } finally {
       setIsLoading(false);
     }
@@ -45,7 +53,7 @@ const UploadDataScreen = () => {
       model = JSON.parse(text);
     } catch (err) {
       console.error(err);
-      Alert.alert('Invalid JSON');
+      Alert.alert(t('error-invalid-json'));
     }
 
     if (!model) {
@@ -61,22 +69,22 @@ const UploadDataScreen = () => {
         }),
       );
       dispatch(addSyllabuses(model.syllabuses));
-      Alert.alert('Import successful');
+      Alert.alert(t('import-successful'));
     } catch (e) {
       console.error(e);
-      Alert.alert('Error importing data');
+      Alert.alert(t('error-importing-data'));
     }
     navigation.navigate('Agenda');
   };
 
   return (
     <View>
-      <TextInput value={url} onChangeText={setUrl} placeholder="Enter URL" />
+      <TextInput value={url} onChangeText={setUrl} placeholder={t('enter-url')} />
       {isLoading ? (
         <ActivityIndicator />
       ) : (
         <Button
-          title="Import Data"
+          title={t('import-data')}
           onPress={handleDataImport}
           disabled={!url}
         />
